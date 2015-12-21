@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  	<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=no">
+  	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+  	<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+  	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+  	<script src="http://www.parsecdn.com/js/parse-1.6.12.min.js"></script>
+  	<script type="text/javascript">
+  		// Initialize Parse with your Parse application javascript keys
+
+  		function writeConsole(msg){
+  			$("#consoleTest").append(msg);
+  		}
+
+  		$(window).load(function(){
+  			Parse.initialize(
+	  			"RU4BgvMuXnlkHDle7VH9EKMapirGjza9Gh3ZgrAR",
+	            "3ev5gFZeFKSVG6ZPQysKJuK7ncyPIMp6Q2erPJ17"
+	        );
+
+  			$('#signUpBtn').click(function(){
+  				var user = new Parse.User();
+			    // user.set("email", email); //optional
+			    user.set("username", $('#inputUsername').val()); //required
+			    user.set("password", $('#inputPassword').val()); //required
+			    writeConsole("<p>Processing.....</p>");
+			    user.signUp(null, {
+			        success: function(user) {
+			        	writeConsole("<p>Completed.</p>");
+			            alert("success, signed up!");
+			        },
+			        error: function(user, error) {
+			        	writeConsole("<p>Error occurred.</p>");
+			            alert("Error: " + error.code + " " + error.message);
+			        }
+			    });
+  			});
+
+  		});
+
+  	</script>
+  	<style type="text/css">
+  		/*@media (min-width: 768px) {
+  			.navbar-form .form-control{
+  				width: 320px;
+  			}
+  			.table-path{
+  				font-size: 16px;
+    			margin: 6px 0;
+  			}
+  			.table-path > .glyphicon{
+  				margin-right: 5px;
+  			}
+  		}
+  		.loading{
+  			margin: 7px 5px;
+  			display: none;
+  		}
+
+		.container-scroll{
+			overflow:auto;
+		}
+  		.glyphicon-refresh-animate {
+		    -animation: spin .7s infinite linear;
+		    -webkit-animation: spin2 .7s infinite linear;
+		}
+
+		@-webkit-keyframes spin2 {
+		    from { -webkit-transform: rotate(0deg);}
+		    to { -webkit-transform: rotate(360deg);}
+		}
+
+		@keyframes spin {
+		    from { transform: scale(1) rotate(0deg);}
+		    to { transform: scale(1) rotate(360deg);}
+		}*/
+  	</style>
+  </head>
+  <body>
+  	<form class="form-inline">
+	  <div class="form-group">
+	    <label for="inputUsername">Username</label>
+	    <input type="text" class="form-control" id="inputUsername" placeholder="Your Name">
+	  </div>
+	  <div class="form-group">
+	    <label for="inputPassword">Password</label>
+	    <input type="password" class="form-control" id="inputPassword" placeholder="Password">
+	  </div>
+	  <button id="signUpBtn"type="button" class="btn btn-default">Sign Up</button>
+	</form>
+	<div id="consoleTest"></div>
+  </body>
+</html>
