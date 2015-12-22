@@ -87,17 +87,29 @@
 </head>
 
 <body>
-    <form class="form-inline">
-        <div class="form-group">
-            <label for="inputUsername">Username</label>
-            <input type="text" class="form-control" id="inputUsername" placeholder="Your Name">
+    <div class="container" style="text-align: center;">
+        <img src="image/Fablab-Taipei-Logo.png" alt="Fablab-Taipei-Logo" style="margin: 50px;" />
+    </div>
+    <div class="container" id="registerForm">
+        <div class="col-md-6 col-md-offset-3">
+            <form>
+                <div class="form-group">
+                    <label for="inputUsername">Username</label>
+                    <input type="text" class="form-control" id="inputUsername" placeholder="Your Name">
+                </div>
+                <div class="form-group">
+                    <label for="inputPassword">Password</label>
+                    <input type="password" class="form-control" id="inputPassword" placeholder="Password">
+                    <a id="forgotPassword">Forgot your password?</a>
+                </div>
+                <div class="singLog"></div>
+                <div class="form-group" style="text-align: center;">
+                    <button id="signUpBtn" type="button" class="btn btn-default">Sign Up</button>
+                    <button id="signUpBtn" type="button" class="btn btn-default">Sign In</button>
+                </div>
+            </form>
         </div>
-        <div class="form-group">
-            <label for="inputPassword">Password</label>
-            <input type="password" class="form-control" id="inputPassword" placeholder="Password">
-        </div>
-        <button id="signUpBtn" type="button" class="btn btn-default">Sign Up</button>
-    </form>
+    </div>
     <div id="consoleTest"></div>
 </body>
 
