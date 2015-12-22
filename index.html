@@ -37,6 +37,21 @@
 			    });
   			});
 
+  			$('#signInBtn').click(function(){
+  				var n = $('#inputUsername').val();
+  				var p = $('#inputPassword').val();
+  				Parse.User.logIn(n, p, {
+  					success: function(user) {
+			        	// writeConsole("<p>Completed.</p>");
+			            alert("success, welcome " + user.getUsername());
+			        },
+			        error: function(user, error) {
+			        	// writeConsole("<p>Error occurred.</p>");
+			            alert("Error: " + error.code + " " + error.message);
+			        }
+  				});
+  			});
+
   		});
 
   	</script>
@@ -88,6 +103,7 @@
 	    <input type="password" class="form-control" id="inputPassword" placeholder="Password">
 	  </div>
 	  <button id="signUpBtn"type="button" class="btn btn-default">Sign Up</button>
+	  <button id="signInBtn"type="button" class="btn btn-default">Sign In</button>
 	</form>
 	<div id="consoleTest"></div>
   </body>
