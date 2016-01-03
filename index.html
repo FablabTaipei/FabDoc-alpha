@@ -5,7 +5,8 @@
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
     <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
-    <script src="http://www.parsecdn.com/js/parse-1.6.12.min.js"></script>
+    <script src="//www.parsecdn.com/js/parse-1.2.19.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.min.js"></script>
     <script type="text/javascript">
     	// Initialize Parse with your Parse application javascript keys
 	    function writeConsole(msg) {
@@ -101,7 +102,8 @@
     <div class="container" style="text-align: center;">
         <img src="image/Fablab-Taipei-Logo.png" alt="Fablab-Taipei-Logo" style="margin: 50px;" />
     </div>
-    <div class="container" id="registerForm">
+    <div class="main_container" id="registerForm">
+        <script id="login-tpl" type="text/x-handlebars-template">
         <div class="col-md-6 col-md-offset-3">
             <form>
                 <div class="form-group">
@@ -120,7 +122,13 @@
                 </div>
             </form>
         </div>
+        </script>
+
+        <script id="welcome-tpl" type="text/x-handlebars-template">
+          <h2>Welcome, {{username}}!</h2>
+        </script>
     </div>
     <div id="consoleTest"></div>
+    <script type="text/javascript" src="js/login.js"></script>
 </body>
 </html>
