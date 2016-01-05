@@ -5,60 +5,59 @@
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
     <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
-    <script src="http://www.parsecdn.com/js/parse-1.6.12.min.js"></script>
+    <script type="text/javascript" src="js/parse-1.2.19.min.js"></script>
+    <script type="text/javascript" src="js/handlebars.min.js"></script>
     <script type="text/javascript">
     	// Initialize Parse with your Parse application javascript keys
 	    function writeConsole(msg) {
 	        $("#consoleTest").append(msg);
 	    }
 
-    	$(window).load(function(){
-  			Parse.initialize(
-	  			"RU4BgvMuXnlkHDle7VH9EKMapirGjza9Gh3ZgrAR",
-	            "3ev5gFZeFKSVG6ZPQysKJuK7ncyPIMp6Q2erPJ17"
-	        );
+    // 	$(window).load(function(){
 
-  			$('#signUpBtn').click(function(){
-  				var user = new Parse.User();
-			    // user.set("email", email); //optional
-			    user.set("username", $('#inputUsername').val()); //required
-			    user.set("password", $('#inputPassword').val()); //required
-			    writeConsole("<p>Processing.....</p>");
-			    user.signUp(null, {
-			        success: function(user) {
-			        	writeConsole("<p>Completed.</p>");
-			            alert("success, signed up!");
-			        },
-			        error: function(user, error) {
-			        	writeConsole("<p>Error occurred.</p>");
-			            alert("Error: " + error.code + " " + error.message);
-			        }
-			    });
-  			});
+  			// $('#signUpBtn').click(function(){
+  			// 	var user = new Parse.User();
+			  //   // user.set("email", email); //optional
+			  //   user.set("username", $('#inputUsername').val()); //required
+			  //   user.set("password", $('#inputPassword').val()); //required
+			  //   writeConsole("<p>Processing.....</p>");
+			  //   user.signUp(null, {
+			  //       success: function(user) {
+			  //       	writeConsole("<p>Completed.</p>");
+			  //           alert("success, signed up!");
+			  //       },
+			  //       error: function(user, error) {
+			  //       	writeConsole("<p>Error occurred.</p>");
+			  //           alert("Error: " + error.code + " " + error.message);
+			  //       }
+			  //   });
+  			// });
 
-  			$('#signInBtn').click(function(){
-  				var n = $('#inputUsername').val();
-  				var p = $('#inputPassword').val();
-  				Parse.User.logIn(n, p, {
-  					success: function(user) {
-			        	// writeConsole("<p>Completed.</p>");
-			            alert("success, welcome " + user.getUsername());
-			        },
-			        error: function(user, error) {
-			        	// writeConsole("<p>Error occurred.</p>");
-			            alert("Error: " + error.code + " " + error.message);
-			        }
-  				});
-  			});
+  			// $('#signInBtn').click(function(){
+  			// 	var n = $('#inputUsername').val();
+  			// 	var p = $('#inputPassword').val();
+  			// 	Parse.User.logIn(n, p, {
+  			// 		success: function(user) {
+			  //       	// writeConsole("<p>Completed.</p>");
+			  //           alert("success, welcome " + user.getUsername());
+			  //       },
+			  //       error: function(user, error) {
+			  //       	// writeConsole("<p>Error occurred.</p>");
+			  //           alert("Error: " + error.code + " " + error.message);
+			  //       }
+  			// 	});
+  			// });
 
-  		});
+  		// });
 
-    $(document).ready(function() {
+    // $(document).ready(function() {
 
 
 
-    });
+    // });
+
     </script>
+
     <style type="text/css">
     /*@media (min-width: 768px) {
   		.navbar-form .form-control{
@@ -101,7 +100,10 @@
     <div class="container" style="text-align: center;">
         <img src="image/Fablab-Taipei-Logo.png" alt="Fablab-Taipei-Logo" style="margin: 50px;" />
     </div>
-    <div class="container" id="registerForm">
+
+    <div class="main-container"></div>
+
+    <script id="login-tpl" type="text/x-handlebars-template">
         <div class="col-md-6 col-md-offset-3">
             <form>
                 <div class="form-group">
@@ -113,14 +115,26 @@
                     <input type="password" class="form-control" id="inputPassword" placeholder="Password">
                     <a id="forgotPassword">Forgot your password?</a>
                 </div>
-                <div class="singLog"></div>
+                <div class="signLog"></div>
                 <div class="form-group" style="text-align: center;">
                     <button id="signUpBtn" type="button" class="btn btn-default">Sign Up</button>
                     <button id="signInBtn" type="button" class="btn btn-default">Sign In</button>
                 </div>
             </form>
         </div>
+    </script>
+
+    <script id="projects-tpl" type="text/x-handlebars-template">
+    {{#each project}}
+    <div class="blog-post">
+      <h2 class="blog-post-title"><a href="#/project/{{objectId}}">{{title}}</a></h2>
+      <p class="blog-post-meta">by {{host}}</p>
+      <div>{{description}}</div>
     </div>
+    {{/each}}
+    </script>
+
     <div id="consoleTest"></div>
+    <script type="text/javascript" src="js/fabdoc.js"></script>
 </body>
 </html>
