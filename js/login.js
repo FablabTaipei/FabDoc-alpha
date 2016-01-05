@@ -1,9 +1,13 @@
-// $(function() {
+$(function() {
 
-    // Parse.$ = jQuery;s
+    Parse.$ = jQuery;
 
-    // Replace this line with the one on your Quickstart Guide Page
-    // Parse.initialize("HC87tn6aA7c3sYx9X0vwwLVXeqHDRMYYmrUBK5zv", "3piNGGnRMhvWo8u9pKD9TDc1MJlWhlvK78Vr3fHo");
+
+    Parse.initialize(
+        "RU4BgvMuXnlkHDle7VH9EKMapirGjza9Gh3ZgrAR",
+            "3ev5gFZeFKSVG6ZPQysKJuK7ncyPIMp6Q2erPJ17"
+        );
+
 
     // var Blog = Parse.Object.extend('Blog', {
     //         update: function(data) {
@@ -72,7 +76,7 @@
     // var BlogView = Parse.View.extend({
     //         template: Handlebars.compile($('#blog-tpl').html()),
     //         events: {
-    //             'submit .form-comment': 'submit'
+    //             'submit #form-comment': 'submit'
     //         },
     //         submit: function(e) {
     //             e.preventDefault();
@@ -116,6 +120,41 @@
     //     }),
     var LoginView = Parse.View.extend({
             template: Handlebars.compile($('#login-tpl').html()),
+            events: {
+                'click #signUpBtn': 'signUp',
+                'click #signInBtn': 'login'
+            },
+            signUp: function(){
+                var user = new Parse.User();
+                // user.set("email", email); //optional
+                user.set("username", $('#inputUsername').val()); //required
+                user.set("password", $('#inputPassword').val()); //required
+                writeConsole("<p>Processing.....</p>");
+                user.signUp(null, {
+                    success: function(user) {
+                        writeConsole("<p>Completed.</p>");
+                        alert("success, signed up!");
+                    },
+                    error: function(user, error) {
+                        writeConsole("<p>Error occurred.</p>");
+                        alert("Error: " + error.code + " " + error.message);
+                    }
+                });
+            },
+            login: function(){
+                var n = $('#inputUsername').val();
+                var p = $('#inputPassword').val();
+                Parse.User.logIn(n, p, {
+                    success: function(user) {
+                        // writeConsole("<p>Completed.</p>");
+                        alert("success, welcome " + user.getUsername());
+                    },
+                    error: function(user, error) {
+                        // writeConsole("<p>Error occurred.</p>");
+                        alert("Error: " + error.code + " " + error.message);
+                    }
+                });
+            },
             render: function(){
                 this.$el.html(this.template());
             }
@@ -341,6 +380,6 @@
         // blogRouter = new BlogRouter();
         loginView = new LoginView();
         loginView.render();
-        $('.main_container').html(loginView.el);
+        $('.main-container').html(loginView.el);
         // blogRouter.start();
-// });
+});
