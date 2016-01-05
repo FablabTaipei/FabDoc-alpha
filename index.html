@@ -100,8 +100,10 @@
     <div class="container" style="text-align: center;">
         <img src="image/Fablab-Taipei-Logo.png" alt="Fablab-Taipei-Logo" style="margin: 50px;" />
     </div>
-    <div class="main-container" id="registerForm">
-        <script id="login-tpl" type="text/x-handlebars-template">
+
+    <div class="main-container"></div>
+
+    <script id="login-tpl" type="text/x-handlebars-template">
         <div class="col-md-6 col-md-offset-3">
             <form>
                 <div class="form-group">
@@ -120,13 +122,19 @@
                 </div>
             </form>
         </div>
-        </script>
+    </script>
 
-        <script id="welcome-tpl" type="text/x-handlebars-template">
-          <h2>Welcome, {{username}}!</h2>
-        </script>
+    <script id="projects-tpl" type="text/x-handlebars-template">
+    {{#each project}}
+    <div class="blog-post">
+      <h2 class="blog-post-title"><a href="#/project/{{objectId}}">{{title}}</a></h2>
+      <p class="blog-post-meta">by {{host}}</p>
+      <div>{{description}}</div>
     </div>
+    {{/each}}
+    </script>
+
     <div id="consoleTest"></div>
-    <script type="text/javascript" src="js/login.js"></script>
+    <script type="text/javascript" src="js/fabdoc.js"></script>
 </body>
 </html>

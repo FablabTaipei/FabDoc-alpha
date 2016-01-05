@@ -7,45 +7,67 @@ $(function() {
 
     var $container = $('.main-container'),
 
-        // Project = Parse.Object.extend('Project', {
-        //     update: function(data) {
-        //         // Only set ACL if the project doesn't have it
-        //         if ( !this.get('ACL') ) {
-        //             // Create an ACL object to grant access to the current user 
-        //             // (also the author of the newly created project)
-        //             var projectACL = new Parse.ACL(Parse.User.current());
-        //             // Grant read-read only access to the public so everyone can see it
-        //             projectACL.setPublicReadAccess(true);
-        //             // Set this ACL object to the ACL field
-        //             this.setACL(projectACL);
-        //         }
-
-        //         this.set({
-        //             'title': data.title,
-        //             'category': category,
-        //             'summary': data.summary,
-        //             'content': data.content,
-        //             // Set author to the existing project author if editing, use current user if creating
-        //             // The same logic goes into the following three fields
-        //             'author': this.get('author') || Parse.User.current(),
-        //             'authorName': this.get('authorName') || Parse.User.current().get('username'),
-        //             'time': this.get('time') || new Date().toDateString()
-        //         }).save(null, {
-        //             success: function(project) {
-        //                 blogRouter.navigate('#/admin', { trigger: true });
-        //             },
-        //             error: function(blog, error) {
-        //                 console.log(blog);
-        //                 console.log(error);
-        //             }
+        // ProjectView = Parse.View.extend({
+        //     template: Handlebars.compile($('#project-tpl').html()),
+        //     render: function() { 
+        //         var self = this,
+        //             attributes = this.model.toJSON(),
+        //             // Create a collection base on that new query
+        //             collection = query.collection();
+        //         // Fetch the collection
+        //         collection.fetch().then(function(comments) {
+        //             // Store the comments as a JSON object and add it into attributes object
+        //             attributes.comment = comments.toJSON();
+        //             self.$el.html(self.template(attributes));
         //         });
         //     }
         // }),
 
-        // Projects = Parse.Collection.extend({
-        //     model: Project,
-        //     query: (new Parse.Query(Projects)).descending('createdAt')
-        // }),
+        
+
+        Project = Parse.Object.extend('Project', {
+            update: function(data) {
+                // Only set ACL if the project doesn't have it
+                if ( !this.get('ACL') ) {
+                    // Create an ACL object to grant access to the current user 
+                    // (also the author of the newly created project)
+                    var projectACL = new Parse.ACL(Parse.User.current());
+                    // Grant read-read only access to the public so everyone can see it
+                    projectACL.setPublicReadAccess(true);
+                    // Set this ACL object to the ACL field
+                    this.setACL(projectACL);
+                }
+
+                this.set({
+                    'title': data.title,
+                    'description': data.description,
+                    // Set author to the existing project author if editing, use current user if creating
+                    // The same logic goes into the following three fields
+                    'host': this.get('host') || Parse.User.current(),
+                }).save(null, {
+                    success: function(project) {
+                        router.navigate('#/index', { trigger: true });
+                    },
+                    error: function(blog, error) {
+                        console.log(project);
+                        console.log(error);
+                    }
+                });
+            }
+        }),
+
+        Projects = Parse.Collection.extend({
+            model: Project,
+            query: (new Parse.Query(Project)).descending('createdAt')
+        }),
+
+        ProjectsView = Parse.View.extend({
+            template: Handlebars.compile($('#projects-tpl').html()),
+            render: function() { 
+                var collection = { project: this.collection.toJSON() };
+                this.$el.html(this.template(collection));
+            }
+        }),
 
         LoginView = Parse.View.extend({
             template: Handlebars.compile($('#login-tpl').html()),
@@ -77,6 +99,7 @@ $(function() {
                     success: function(user) {
                         // writeConsole("<p>Completed.</p>");
                         alert("success, welcome " + user.getUsername());
+                        router.navigate('#/project', { trigger: true });
                     },
                     error: function(user, error) {
                         // writeConsole("<p>Error occurred.</p>");
@@ -92,10 +115,10 @@ $(function() {
         Router = Parse.Router.extend({
 
             // Here you can define some shared variables
-            // initialize: function(options){
-            //     this.blogs = new Blogs();
-            //     this.categories = new Categories();
-            // },
+            initialize: function(options){
+                this.projects = new Projects();
+                // this.categories = new Categories();
+            },
             
             // This runs when we start the router. Just leave it for now.
             start: function(){
@@ -115,7 +138,7 @@ $(function() {
             routes: {
                 '': 'index',
                 'index': 'index',
-                // 'project/:id': 'project',
+                'project': 'project',
                 // 'admin': 'admin',
                 'login': 'index',
                 // 'add': 'add',
@@ -152,21 +175,21 @@ $(function() {
             //         }
             //     });
             // },
-            // project: function(id) {
-            //     var query = new Parse.Query(Project);
-            //     query.get(id, {
-            //         success: function(project) {
-            //             var projectView = new projectView({ model: Project });
-            //             projectView.render();
-            //             $container.html(projectView.el);
-            //         },
-            //         error: function(project, error) {
-            //             console.log(error);
-            //         }
-            //     });
-            // },
-            // admin: function() {
+            project: function() {
+                this.projects.fetch({
+                    success: function(projects) {
+                        var projectsView = new ProjectsView({ collection: projects });
+                        console.log(projectsView);
+                        projectsView.render();
+                        $container.html(projectsView.el);
+                    },
+                    error: function(blogs, error) {
+                        console.log(error);
+                    }
+                });
+            },
 
+            // admin: function() {
             //     var currentUser = Parse.User.current();
 
             //     // Check login
