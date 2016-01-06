@@ -69,6 +69,38 @@ $(function() {
             }
         }),
 
+        NewProject = Parse.View.extend({
+            template: Handlebars.compile($('#new-project-tpl').html()),
+            events: {
+                'fileupload #fileupload': 'upload'
+            },
+            upload: $('#fileupload').fileupload({
+                        dataType: 'json',
+                        add: function (e, data) {
+                            data.context = $('<button/>').text('Upload')
+                                .appendTo(document.body)
+                                .click(function () {
+                                    data.context = $('<p/>').text('Uploading...').replaceAll($(this));
+                                    data.submit();
+                                });
+                        },
+                        done: function (e, data) {
+                            $.each(data.result.files, function (index, file) {
+                                $('<p/>').text(file.name).appendTo(document.body);
+                            });
+                        },
+                        progressall: function (e, data) {
+                        var progress = parseInt(data.loaded / data.total * 100, 10);
+                        $('#progress .progress-bar').css(
+                            'width',
+                            progress + '%'
+                        )}
+                    }),
+            render: function(){
+                this.$el.html(this.template());
+            }
+        }),
+
         LoginView = Parse.View.extend({
             template: Handlebars.compile($('#login-tpl').html()),
             events: {
@@ -112,6 +144,7 @@ $(function() {
             }
         }),
 
+
         Router = Parse.Router.extend({
 
             // Here you can define some shared variables
@@ -139,6 +172,7 @@ $(function() {
                 '': 'index',
                 'index': 'index',
                 'project': 'project',
+                'new_project': 'new_project',
                 // 'admin': 'admin',
                 'login': 'index',
                 // 'add': 'add',
@@ -179,7 +213,6 @@ $(function() {
                 this.projects.fetch({
                     success: function(projects) {
                         var projectsView = new ProjectsView({ collection: projects });
-                        console.log(projectsView);
                         projectsView.render();
                         $container.html(projectsView.el);
                     },
@@ -188,6 +221,12 @@ $(function() {
                     }
                 });
             },
+
+            new_project: function() {
+                var newProject = new NewProject();
+                newProject.render();
+                $container.html(newProject.el);
+            }
 
             // admin: function() {
             //     var currentUser = Parse.User.current();
@@ -265,5 +304,5 @@ $(function() {
         }),
         router = new Router();
 
-        router.start();
+    router.start();
 });

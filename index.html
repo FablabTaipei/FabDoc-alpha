@@ -7,6 +7,9 @@
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/parse-1.2.19.min.js"></script>
     <script type="text/javascript" src="js/handlebars.min.js"></script>
+    <script type="text/javascript" src="js/vendor/jquery.ui.widget.js"></script>
+    <script type="text/javascript" src="js/jquery.iframe-transport.js"></script>
+    <script type="text/javascript" src="js/jquery.fileupload.js"></script>
     <script type="text/javascript">
     	// Initialize Parse with your Parse application javascript keys
 	    function writeConsole(msg) {
@@ -125,14 +128,28 @@
     </script>
 
     <script id="projects-tpl" type="text/x-handlebars-template">
-    {{#each project}}
-    <div class="blog-post">
-      <h2 class="blog-post-title"><a href="#/project/{{objectId}}">{{title}}</a></h2>
-      <p class="blog-post-meta">by {{host}}</p>
-      <div>{{description}}</div>
-    </div>
-    {{/each}}
+        <div class="col-md-6 blog-post">
+            <h2 class="blog-post-title"><a href="#/new_project">Add New Project</a></h2>
+        </div>
+        {{#each project}}
+        <div class="col-md-6 blog-post">
+            <h2 class="blog-post-title"><a href="#/project/{{objectId}}">{{title}}</a></h2>
+            <p class="blog-post-meta">by {{host}}</p>
+            <div>{{description}}</div>
+        </div>
+        {{/each}}
     </script>
+
+    <script id="new-project-tpl" type="text/x-handlebars-template">
+        <div id="fileupload"></div>
+        <div class="progress" id="progress">
+            <div class="progress-bar" role="progressbar" aria-valuenow="70"
+            aria-valuemin="0" aria-valuemax="100" style="width:0%"></div>
+        </div>
+    </script>
+
+
+    
 
     <div id="consoleTest"></div>
     <script type="text/javascript" src="js/fabdoc.js"></script>
