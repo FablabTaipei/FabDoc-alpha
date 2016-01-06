@@ -23,8 +23,6 @@ $(function() {
         //     }
         // }),
 
-        
-
         Project = Parse.Object.extend('Project', {
             update: function(data) {
                 // Only set ACL if the project doesn't have it
@@ -48,7 +46,7 @@ $(function() {
                     success: function(project) {
                         router.navigate('#/index', { trigger: true });
                     },
-                    error: function(blog, error) {
+                    error: function(project, error) {
                         console.log(project);
                         console.log(error);
                     }
@@ -72,30 +70,32 @@ $(function() {
         NewProject = Parse.View.extend({
             template: Handlebars.compile($('#new-project-tpl').html()),
             events: {
-                'fileupload #fileupload': 'upload'
+                'click #uploadBtn': 'upload'
             },
-            upload: $('#fileupload').fileupload({
-                        dataType: 'json',
-                        add: function (e, data) {
-                            data.context = $('<button/>').text('Upload')
-                                .appendTo(document.body)
-                                .click(function () {
-                                    data.context = $('<p/>').text('Uploading...').replaceAll($(this));
-                                    data.submit();
-                                });
-                        },
-                        done: function (e, data) {
-                            $.each(data.result.files, function (index, file) {
-                                $('<p/>').text(file.name).appendTo(document.body);
-                            });
-                        },
-                        progressall: function (e, data) {
-                        var progress = parseInt(data.loaded / data.total * 100, 10);
-                        $('#progress .progress-bar').css(
-                            'width',
-                            progress + '%'
-                        )}
-                    }),
+            upload: function(){
+                // $('#fileupload').fileupload({
+                //     dataType: 'json',
+                //     add: function (e, data) {
+                //         data.context = $('<button/>').text('Upload')
+                //             .appendTo(document.body)
+                //             .click(function () {
+                //                 data.context = $('<p/>').text('Uploading...').replaceAll($(this));
+                //                 data.submit();
+                //             });
+                //     },
+                //     done: function (e, data) {
+                //         $.each(data.result.files, function (index, file) {
+                //             $('<p/>').text(file.name).appendTo(document.body);
+                //         });
+                //     },
+                //     progressall: function (e, data) {
+                //     var progress = parseInt(data.loaded / data.total * 100, 10);
+                //     $('#progress .progress-bar').css(
+                //         'width',
+                //         progress + '%'
+                //     )}
+                // });
+            },
             render: function(){
                 this.$el.html(this.template());
             }
@@ -216,7 +216,7 @@ $(function() {
                         projectsView.render();
                         $container.html(projectsView.el);
                     },
-                    error: function(blogs, error) {
+                    error: function(projects, error) {
                         console.log(error);
                     }
                 });
@@ -226,6 +226,33 @@ $(function() {
                 var newProject = new NewProject();
                 newProject.render();
                 $container.html(newProject.el);
+                $('#fileupload').fileupload({
+                    dataType: 'json',
+                    add: function (e, data) {
+                        data.context = $('#uploadBtn').click(function () {
+                            data.context = $('<p/>').text('Uploading...').replaceAll($(this));
+                            data.submit();
+                        });
+                    },
+                    done: function (e, data) {
+                        $.each(data.result.files, function (index, file) {
+                            $('<p/>').text(file.name).appendTo(document.getElementById('progressLog'));
+                        });
+                    },
+                    progressall: function (e, data) {
+                        var progress = parseInt(data.loaded / data.total * 100, 10);
+                        $('.progress .progress-bar').css(
+                            'width',
+                            progress + '%'
+                    )}
+                }).on('fileuploadadd', function (e, data) {
+                    data.context = $('<div/>').appendTo('#files');
+                    $.each(data.files, function (index, file) {
+                        var node = $('<p/>').append($('<span/>').text(file.name));
+                        node.appendTo(data.context);
+                    })
+                });
+
             }
 
             // admin: function() {
