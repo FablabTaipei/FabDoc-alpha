@@ -7,22 +7,6 @@ $(function() {
 
     var $container = $('.main-container'),
 
-        // ProjectView = Parse.View.extend({
-        //     template: Handlebars.compile($('#project-tpl').html()),
-        //     render: function() { 
-        //         var self = this,
-        //             attributes = this.model.toJSON(),
-        //             // Create a collection base on that new query
-        //             collection = query.collection();
-        //         // Fetch the collection
-        //         collection.fetch().then(function(comments) {
-        //             // Store the comments as a JSON object and add it into attributes object
-        //             attributes.comment = comments.toJSON();
-        //             self.$el.html(self.template(attributes));
-        //         });
-        //     }
-        // }),
-
         Project = Parse.Object.extend('Project', {
             update: function(data) {
                 // Only set ACL if the project doesn't have it
@@ -69,33 +53,11 @@ $(function() {
 
         NewProject = Parse.View.extend({
             template: Handlebars.compile($('#new-project-tpl').html()),
-            events: {
-                'click #uploadBtn': 'upload'
-            },
-            upload: function(){
-                // $('#fileupload').fileupload({
-                //     dataType: 'json',
-                //     add: function (e, data) {
-                //         data.context = $('<button/>').text('Upload')
-                //             .appendTo(document.body)
-                //             .click(function () {
-                //                 data.context = $('<p/>').text('Uploading...').replaceAll($(this));
-                //                 data.submit();
-                //             });
-                //     },
-                //     done: function (e, data) {
-                //         $.each(data.result.files, function (index, file) {
-                //             $('<p/>').text(file.name).appendTo(document.body);
-                //         });
-                //     },
-                //     progressall: function (e, data) {
-                //     var progress = parseInt(data.loaded / data.total * 100, 10);
-                //     $('#progress .progress-bar').css(
-                //         'width',
-                //         progress + '%'
-                //     )}
-                // });
-            },
+            // events: {
+            //     'click #uploadBtn': 'upload'
+            // },
+            // upload: function(){
+            // },
             render: function(){
                 this.$el.html(this.template());
             }
@@ -226,34 +188,94 @@ $(function() {
                 var newProject = new NewProject();
                 newProject.render();
                 $container.html(newProject.el);
-                $('#fileupload').fileupload({
-                    dataType: 'json',
-                    add: function (e, data) {
-                        data.context = $('#uploadBtn').click(function () {
-                            data.context = $('<p/>').text('Uploading...').replaceAll($(this));
-                            data.submit();
-                        });
-                    },
-                    done: function (e, data) {
-                        $.each(data.result.files, function (index, file) {
-                            $('<p/>').text(file.name).appendTo(document.getElementById('progressLog'));
-                        });
-                    },
-                    progressall: function (e, data) {
-                        var progress = parseInt(data.loaded / data.total * 100, 10);
-                        $('.progress .progress-bar').css(
-                            'width',
-                            progress + '%'
-                    )}
-                }).on('fileuploadadd', function (e, data) {
-                    data.context = $('<div/>').appendTo('#files');
-                    $.each(data.files, function (index, file) {
-                        var node = $('<p/>').append($('<span/>').text(file.name));
-                        node.appendTo(data.context);
-                    })
-                });
+                $('#uploadBtn').click(function () {
+                    function saveStepPhoto(objParseFile) {
+                        var step = new Parse.Object("Step");
+                        step.set("order",1);
+                        step.set("photo", objParseFile);
+                        step.set("commit", "first photo in test");
+                        step.set("description", "hello world, I am fablab!");
+                        step.save();
+                    };
 
+                    console.log(1);
+                    var fileUploadControl = $("#fileupload")[0];
+                    console.log(fileUploadControl.files);
+                    if (fileUploadControl.files.length > 0) {
+                        var photoFile = fileUploadControl.files[0];
+                        var name = "photo.jpg";
+                        console.log(2);
+                        var parseFile = new Parse.File(name, photoFile);
+                        parseFile.save().then(function() {
+                            saveStepPhoto(parseFile);
+                            // The file has been saved to Parse.
+                        }, function(error) {
+                            alert(error);
+                            // The file either could not be read, or could not be saved to Parse.
+                        });
+                    };
+                });
             }
+            //     $('#fileupload').fileupload({
+            //         dataType: 'json',
+            //         add: function (e, data) {
+            //             data.context = $('#uploadBtn').click(function () {
+            //                 data.context = $('<p/>').text('Uploading...').replaceAll($(this));
+            //                 data.submit();
+            //             });
+            //         },
+            //         done: function (e, data) {
+            //             $.each(data.result.files, function (index, file) {
+            //                 $('<p/>').text(file.name).appendTo(document.getElementById('progressLog'));
+            //             });
+            //         },
+            //         start: function (e, data) {
+            //             function saveStepPhoto(objParseFile) {
+            //                 var step = new Parse.Object("Step");
+            //                 step.set("order",1);
+            //                 step.set("photo", objParseFile);
+            //                 step.set("commit", "first photo in test");
+            //                 step.set("description", "hello world, I am fablab!");
+            //                 step.save();
+            //             };
+
+            //             console.log(1);
+            //             var fileUploadControl = $("#fileupload")[0];
+            //             console.log(fileUploadControl.files);
+            //             if (fileUploadControl.files.length > 0) {
+            //                 var photoFile = fileUploadControl.files[0];
+            //                 var name = "photo.jpg";
+            //                 console.log(2);
+            //                 var parseFile = new Parse.File(name, photoFile);
+            //                 parseFile.save().then(function() {
+            //                     saveStepPhoto(parseFile);
+            //                     // The file has been saved to Parse.
+            //                 }, function(error) {
+            //                     alert(error);
+            //                     // The file either could not be read, or could not be saved to Parse.
+            //                 });
+            //             };
+            //         },
+            //         stop: function (e) {
+            //             console.log('Uploads finished');
+                        
+            //         },
+            //         progressall: function (e, data) {
+            //             var progress = parseInt(data.loaded / data.total * 100, 10);
+
+            //             $('.progress .progress-bar').css(
+            //                 'width',
+            //                 progress + '%'
+            //         )}
+            //     }).on('fileuploadadd', function (e, data) {
+            //         data.context = $('<div/>').appendTo('#files');
+            //         $.each(data.files, function (index, file) {
+            //             var node = $('<p/>').append($('<span/>').text(file.name));
+            //             node.appendTo(data.context);
+            //         })
+            //     });
+
+            // }
 
             // admin: function() {
             //     var currentUser = Parse.User.current();
