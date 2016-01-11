@@ -43,49 +43,23 @@ $(function() {
                 $('#dropzone div').html(ext);
             }
         });
-        $('#uploadBtn').click(function () {
-            function saveStepPhoto(objParseFile) {
-                var step = new Parse.Object("Step");
-                step.set("order",1);
-                step.set("photo", objParseFile);
-                step.set("commit", "first photo in test");
-                step.set("description", "hello world, I am fablab!");
-                step.save();
-            };
-
-            console.log(1);
-            var fileUploadControl = $("#fileupload")[0];
-            console.log(fileUploadControl.files);
-            if (fileUploadControl.files.length > 0) {
-                var photoFile = fileUploadControl.files[0];
-                var name = "photo.jpg";
-                console.log(2);
-                var parseFile = new Parse.File(name, photoFile);
-                parseFile.save().then(function() {
-                    saveStepPhoto(parseFile);
-                    // The file has been saved to Parse.
-                }, function(error) {
-                    alert(error);
-                    // The file either could not be read, or could not be saved to Parse.
-                });
-            };
-        });
     };
+
 
     var $container = $('.main-container'),
 
         Project = Parse.Object.extend('Project', {
             update: function(data) {
                 // Only set ACL if the project doesn't have it
-                if ( !this.get('ACL') ) {
-                    // Create an ACL object to grant access to the current user 
-                    // (also the author of the newly created project)
-                    var projectACL = new Parse.ACL(Parse.User.current());
-                    // Grant read-read only access to the public so everyone can see it
-                    projectACL.setPublicReadAccess(true);
-                    // Set this ACL object to the ACL field
-                    this.setACL(projectACL);
-                }
+                // if ( !this.get('ACL') ) {
+                //     // Create an ACL object to grant access to the current user 
+                //     // (also the author of the newly created project)
+                //     var projectACL = new Parse.ACL(Parse.User.current());
+                //     // Grant read-read only access to the public so everyone can see it
+                //     projectACL.setPublicReadAccess(true);
+                //     // Set this ACL object to the ACL field
+                //     this.setACL(projectACL);
+                // }
 
                 this.set({
                     'title': data.title,
@@ -118,13 +92,8 @@ $(function() {
             }
         }),
 
-        NewProject = Parse.View.extend({
-            template: Handlebars.compile($('#new-project-tpl').html()),
-            // events: {
-            //     'click #uploadBtn': 'upload'
-            // },
-            // upload: function(){
-            // },
+        AddPhotoView = Parse.View.extend({
+            template: Handlebars.compile($('#add-photo-tpl').html()),
             render: function(){
                 this.$el.html(this.template());
             }
@@ -136,7 +105,10 @@ $(function() {
                 'click #signUpBtn': 'signUp',
                 'click #signInBtn': 'login'
             },
-            signUp: function(){
+            signUp: function(e){
+                // Prevent default submit event
+                e.preventDefault();
+
                 var user = new Parse.User();
                 // user.set("email", email); //optional
                 user.set("username", $('#inputUsername').val()); //required
@@ -145,7 +117,8 @@ $(function() {
                 user.signUp(null, {
                     success: function(user) {
                         writeConsole("<p>Completed.</p>");
-                        alert("success, signed up!");
+                        alert("success, signed up");
+                        router.navigate('#/project', { trigger: true });
                     },
                     error: function(user, error) {
                         writeConsole("<p>Error occurred.</p>");
@@ -153,7 +126,10 @@ $(function() {
                     }
                 });
             },
-            login: function(){
+            login: function(e){
+                // Prevent default submit event
+                e.preventDefault();
+
                 var n = $('#inputUsername').val();
                 var p = $('#inputPassword').val();
                 Parse.User.logIn(n, p, {
@@ -173,9 +149,43 @@ $(function() {
             }
         }),
 
+        CreateProjectView = Parse.View.extend({
+            template: Handlebars.compile($('#create-project-tpl').html()),
+            events: {
+                'click #startAddPhotoBtn': 'addPhoto'
+            },
+            addPhoto: function(e){
+                // Prevent default submit event
+                e.preventDefault();
+
+                var user = Parse.User.current();
+                var title = $("#title").val();
+                var description = $("#description").val();
+
+                var NewProject = Parse.Object.extend("Project");
+                var newProject = new NewProject();
+                var projectACL = new Parse.ACL(user);
+                
+                projectACL.setReadAccess(user, true);
+                projectACL.setWriteAccess(user, true);
+
+                newProject.set("title", title);
+                newProject.set("description", description);
+                newProject.set("host", user);
+                newProject.setACL(projectACL);
+
+                newProject.save().then(function() {
+                    router.navigate('#/shoot', { trigger: true });
+                }, function(error) {
+                    alert(error);
+                });
+            },
+            render: function(){
+                this.$el.html(this.template());
+            }
+        }),
 
         Router = Parse.Router.extend({
-
             // Here you can define some shared variables
             initialize: function(options){
                 this.projects = new Projects();
@@ -201,10 +211,10 @@ $(function() {
                 '': 'index',
                 'index': 'index',
                 'project': 'project',
-                'new_project': 'new_project',
+                'shoot': 'shoot',
                 // 'admin': 'admin',
                 'login': 'index',
-                // 'add': 'add',
+                'create': 'create',
                 // 'edit/:id': 'edit',
                 // 'del/:id': 'del',
                 // 'logout': 'logout',
@@ -217,145 +227,74 @@ $(function() {
                 $container.html(loginView.el);
             },
 
-            // category: function(id) {
-            //     // Get the current category object
-            //     var query = new Parse.Query(Category);
-            //     query.get(id, {
-            //         success: function(category) {
-            //             // Query to get the blogs under that category
-            //             var blogQuery = new Parse.Query(Blog).equalTo("category", category).descending('createdAt');
-            //             collection = blogQuery.collection();
-            //             // Fetch blogs
-            //             collection.fetch().then(function(blogs){
-            //                 // Render blogs
-            //                 var blogsView = new BlogsView({ collection: blogs });
-            //                 blogsView.render();
-            //                 $container.html(blogsView.el);
-            //             });
-            //         },
-            //         error: function(category, error) {
-            //             console.log(error);
-            //         }
-            //     });
-            // },
             project: function() {
-                this.projects.fetch({
-                    success: function(projects) {
-                        var projectsView = new ProjectsView({ collection: projects });
-                        projectsView.render();
-                        $container.html(projectsView.el);
-                    },
-                    error: function(projects, error) {
-                        console.log(error);
-                    }
-                });
+                if (!Parse.User.current()) {
+                    this.navigate('#/', { trigger: true });
+                } else {
+                    this.projects.fetch({
+                        success: function(projects) {
+                            var projectsView = new ProjectsView({ collection: projects });
+                            projectsView.render();
+                            $container.html(projectsView.el);
+                        },
+                        error: function(projects, error) {
+                            console.log(error);
+                        }
+                    });
+                }
             },
 
-            new_project: function() {
-                var newProject = new NewProject();
-                newProject.render();
-                $container.html(newProject.el);
-                dropzone();
+            shoot: function() {
+                if (!Parse.User.current()) {
+                    this.navigate('#/', { trigger: true });
+                } else {
+                    var addPhotoView = new AddPhotoView();
+                    addPhotoView.render();
+                    $container.html(addPhotoView.el);
+
+                    dropzone();
+
+                    $('#uploadBtn').click(function (e) {
+                        // Prevent default submit event
+                        e.preventDefault();
+
+                        console.log(1);
+                        var fileUploadControl = $("#fileupload")[0];
+                        console.log(fileUploadControl.files);
+                        if (fileUploadControl.files.length > 0) {
+                            var photoFile = fileUploadControl.files[0];
+                            var name = "photo.jpg";
+                            var parseFile = new Parse.File(name, photoFile);
+                            parseFile.save().then(function() {
+                                var step = new Parse.Object("Step");
+                                console.log(2);
+                                step.set("order",1);
+                                step.set("photo", parseFile);
+                                step.set("commit", "first photo in test");
+                                step.set("description", "hello world, I am fablab!");
+                                step.save().then(function() {
+                                // The file has been saved to Parse.
+                                    addPhotoView.render();
+                                    $container.html(addPhotoView.el);
+                                }, function(error) {
+                                    alert(error);
+                                // The file either could not be read, or could not be saved to Parse.
+                                });
+                            });
+                        };
+                    });
+                }
+            },
+            
+            create: function() {
+                if (!Parse.User.current()) {
+                    this.navigate('#/', { trigger: true });
+                } else {
+                    var createprojectView = new CreateProjectView();
+                    createprojectView.render();
+                    $container.html(createprojectView.el);
+                }
             }
-            //     $('#fileupload').fileupload({
-            //         dataType: 'json',
-            //         add: function (e, data) {
-            //             data.context = $('#uploadBtn').click(function () {
-            //                 data.context = $('<p/>').text('Uploading...').replaceAll($(this));
-            //                 data.submit();
-            //             });
-            //         },
-            //         done: function (e, data) {
-            //             $.each(data.result.files, function (index, file) {
-            //                 $('<p/>').text(file.name).appendTo(document.getElementById('progressLog'));
-            //             });
-            //         },
-            //         start: function (e, data) {
-            //             function saveStepPhoto(objParseFile) {
-            //                 var step = new Parse.Object("Step");
-            //                 step.set("order",1);
-            //                 step.set("photo", objParseFile);
-            //                 step.set("commit", "first photo in test");
-            //                 step.set("description", "hello world, I am fablab!");
-            //                 step.save();
-            //             };
-
-            //             console.log(1);
-            //             var fileUploadControl = $("#fileupload")[0];
-            //             console.log(fileUploadControl.files);
-            //             if (fileUploadControl.files.length > 0) {
-            //                 var photoFile = fileUploadControl.files[0];
-            //                 var name = "photo.jpg";
-            //                 console.log(2);
-            //                 var parseFile = new Parse.File(name, photoFile);
-            //                 parseFile.save().then(function() {
-            //                     saveStepPhoto(parseFile);
-            //                     // The file has been saved to Parse.
-            //                 }, function(error) {
-            //                     alert(error);
-            //                     // The file either could not be read, or could not be saved to Parse.
-            //                 });
-            //             };
-            //         },
-            //         stop: function (e) {
-            //             console.log('Uploads finished');
-                        
-            //         },
-            //         progressall: function (e, data) {
-            //             var progress = parseInt(data.loaded / data.total * 100, 10);
-
-            //             $('.progress .progress-bar').css(
-            //                 'width',
-            //                 progress + '%'
-            //         )}
-            //     }).on('fileuploadadd', function (e, data) {
-            //         data.context = $('<div/>').appendTo('#files');
-            //         $.each(data.files, function (index, file) {
-            //             var node = $('<p/>').append($('<span/>').text(file.name));
-            //             node.appendTo(data.context);
-            //         })
-            //     });
-
-            // }
-
-            // admin: function() {
-            //     var currentUser = Parse.User.current();
-
-            //     // Check login
-            //     if (!currentUser) {
-            //         this.navigate('#/login', { trigger: true });
-            //     } else {
-            //         this.blogs.fetch({
-            //             success: function(blogs) {
-            //                 var blogsAdminView = new BlogsAdminView({ 
-            //                     // Pass in current username to be rendered in #admin-tpl
-            //                     username: currentUser.get('username'),
-            //                     collection: blogs 
-            //                 });
-            //                 blogsAdminView.render();
-            //                 $container.html(blogsAdminView.el);
-            //             },
-            //             error: function(blogs, error) {
-            //                 console.log(error);
-            //             }
-            //         });
-            //     }
-            // },
-            // login: function() {
-            //     var loginView = new LoginView();
-            //     loginView.render();
-            //     $container.html(loginView.el);
-            // },
-            // add: function() {
-            //     // Check login
-            //     if (!Parse.User.current()) {
-            //         this.navigate('#/login', { trigger: true });
-            //     } else {
-            //         var writeprojectView = new WriteprojectView();
-            //         writeprojectView.render();
-            //         $container.html(writeprojectView.el);
-            //     }
-            // },
             // edit: function(id) {
             //     // Check login
             //     if (!Parse.User.current()) {

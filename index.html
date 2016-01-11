@@ -3,7 +3,6 @@
 <head>
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=no">
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
-    <!-- <link rel="stylesheet" type="text/css" href="css/dropzone.css" /> -->
     <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/parse-1.2.19.min.js"></script>
@@ -18,88 +17,7 @@
   	    function writeConsole(msg) {
   	        $("#consoleTest").append(msg);
 	     }
-
-    // 	$(window).load(function(){
-
-  			// $('#signUpBtn').click(function(){
-  			// 	var user = new Parse.User();
-			  //   // user.set("email", email); //optional
-			  //   user.set("username", $('#inputUsername').val()); //required
-			  //   user.set("password", $('#inputPassword').val()); //required
-			  //   writeConsole("<p>Processing.....</p>");
-			  //   user.signUp(null, {
-			  //       success: function(user) {
-			  //       	writeConsole("<p>Completed.</p>");
-			  //           alert("success, signed up!");
-			  //       },
-			  //       error: function(user, error) {
-			  //       	writeConsole("<p>Error occurred.</p>");
-			  //           alert("Error: " + error.code + " " + error.message);
-			  //       }
-			  //   });
-  			// });
-
-  			// $('#signInBtn').click(function(){
-  			// 	var n = $('#inputUsername').val();
-  			// 	var p = $('#inputPassword').val();
-  			// 	Parse.User.logIn(n, p, {
-  			// 		success: function(user) {
-			  //       	// writeConsole("<p>Completed.</p>");
-			  //           alert("success, welcome " + user.getUsername());
-			  //       },
-			  //       error: function(user, error) {
-			  //       	// writeConsole("<p>Error occurred.</p>");
-			  //           alert("Error: " + error.code + " " + error.message);
-			  //       }
-  			// 	});
-  			// });
-
-  		// });
-
-    // $(document).ready(function() {
-
-
-
-    // });
-
     </script>
-
-    <style type="text/css">
-    /*@media (min-width: 768px) {
-  		.navbar-form .form-control{
-  				width: 320px;
-  			}
-  			.table-path{
-  				font-size: 16px;
-    			margin: 6px 0;
-  			}
-  			.table-path > .glyphicon{
-  				margin-right: 5px;
-  			}
-  		}
-  		.loading{
-  			margin: 7px 5px;
-  			display: none;
-  		}
-
-		.container-scroll{
-			overflow:auto;
-		}
-  		.glyphicon-refresh-animate {
-		    -animation: spin .7s infinite linear;
-		    -webkit-animation: spin2 .7s infinite linear;
-		}
-
-		@-webkit-keyframes spin2 {
-		    from { -webkit-transform: rotate(0deg);}
-		    to { -webkit-transform: rotate(360deg);}
-		}
-
-		@keyframes spin {
-		    from { transform: scale(1) rotate(0deg);}
-		    to { transform: scale(1) rotate(360deg);}
-		}*/
-    </style>
 </head>
 
 <body>
@@ -126,13 +44,14 @@
                     <button id="signUpBtn" type="button" class="btn btn-default">Sign Up</button>
                     <button id="signInBtn" type="button" class="btn btn-default">Sign In</button>
                 </div>
+                <div id="consoleTest"></div>
             </form>
         </div>
     </script>
 
     <script id="projects-tpl" type="text/x-handlebars-template">
         <div class="col-md-12 blog-post">
-            <h2 class="blog-post-title"><a href="#/new_project">Add New Project</a></h2>
+            <h2 class="blog-post-title"><a href="#/create">Add New Project</a></h2>
         </div>
         {{#each project}}
         <div class="col-md-12 blog-post">
@@ -143,7 +62,25 @@
         {{/each}}
     </script>
 
-    <script id="new-project-tpl" type="text/x-handlebars-template">
+    <script id="create-project-tpl" type="text/x-handlebars-template">
+        <div class="col-md-6 col-md-offset-3">
+            <form>
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" class="form-control" id="title" placeholder="Your Project Name">
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea class="form-control" rows="2" id="description" placeholder="Add description in 140 words"></textarea>
+                </div>
+                <div class="form-group" style="text-align: center;">
+                    <button id="startAddPhotoBtn" type="button" class="btn btn-default">Start Shooting</button>
+                </div>
+            </form>
+        </div>
+    </script>
+
+    <script id="add-photo-tpl" type="text/x-handlebars-template">
         <div class="col-md-6 col-md-offset-3">
             <form>
                 <div class="form-group" id="dropzone">
@@ -155,8 +92,6 @@
                 </div>
             </form>
         </div>
-        
-
         <style type="text/css">
         #dropzone {
           border: 10px dotted #888;
@@ -210,27 +145,8 @@
           margin-top: -10px;
         }
         </style>
-        <!-- // <form action="/file-upload" class="dropzone">
-        //   <div class="fallback">
-        //     <input name="file" type="file"  id="fileupload" accept="image/*" />
-            
-        //   </div>
-        // </form>
-        //
-         // <div class="col-md-6 blog-post">
-        //     <input class="btn btn-default" type="file" id="fileupload" accept="image/*"></input>
-        //     <button type="submit" class="btn btn-default start" id="uploadBtn">Start upload</button>s
-        //     <div id="files"></div>
-        //     <div class="progress">
-        //         <div class="progress-bar" role="progressbar" aria-valuenow="70"
-        //         aria-valuemin="0" aria-valuemax="100" style="width:0%"></div>
-        //         <div class="col-md-6" id="progressLog"></div>
-        //     </div>
-        // </div> -->
     </script>
 
-
-    <div id="consoleTest"></div>
     <script type="text/javascript" src="js/fabdoc.js"></script>
 </body>
 </html>
