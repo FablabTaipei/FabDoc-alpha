@@ -5,6 +5,73 @@ $(function() {
     // Replace this line with your Parse token
     Parse.initialize("RU4BgvMuXnlkHDle7VH9EKMapirGjza9Gh3ZgrAR","3ev5gFZeFKSVG6ZPQysKJuK7ncyPIMp6Q2erPJ17");
 
+    function dropzone() {
+        $('#dropzone').on('dragover', function() {
+            $(this).addClass('hover');
+        });
+          
+        $('#dropzone').on('dragleave', function() {
+            $(this).removeClass('hover');
+        });
+          
+        $('#dropzone input').on('change', function(e) {
+            var file = this.files[0];
+
+            $('#dropzone').removeClass('hover');
+            
+            if (this.accept && $.inArray(file.type, this.accept.split(/, ?/)) == -1) {
+                return alert('File type not allowed.');
+            }
+            
+            $('#dropzone').addClass('dropped');
+            $('#dropzone img').remove();
+            
+            if ((/^image\/(gif|png|jpeg)$/i).test(file.type)) {
+                var reader = new FileReader(file);
+
+                reader.readAsDataURL(file);
+                  
+                reader.onload = function(e) {
+                    var data = e.target.result,
+                        $img = $('<img />').attr('src', data).fadeIn();
+                    
+                    $('#dropzone div').html($img);
+                };
+            } else {
+                var ext = file.name.split('.').pop();
+                  
+                $('#dropzone div').html(ext);
+            }
+        });
+        $('#uploadBtn').click(function () {
+            function saveStepPhoto(objParseFile) {
+                var step = new Parse.Object("Step");
+                step.set("order",1);
+                step.set("photo", objParseFile);
+                step.set("commit", "first photo in test");
+                step.set("description", "hello world, I am fablab!");
+                step.save();
+            };
+
+            console.log(1);
+            var fileUploadControl = $("#fileupload")[0];
+            console.log(fileUploadControl.files);
+            if (fileUploadControl.files.length > 0) {
+                var photoFile = fileUploadControl.files[0];
+                var name = "photo.jpg";
+                console.log(2);
+                var parseFile = new Parse.File(name, photoFile);
+                parseFile.save().then(function() {
+                    saveStepPhoto(parseFile);
+                    // The file has been saved to Parse.
+                }, function(error) {
+                    alert(error);
+                    // The file either could not be read, or could not be saved to Parse.
+                });
+            };
+        });
+    };
+
     var $container = $('.main-container'),
 
         Project = Parse.Object.extend('Project', {
@@ -188,33 +255,7 @@ $(function() {
                 var newProject = new NewProject();
                 newProject.render();
                 $container.html(newProject.el);
-                $('#uploadBtn').click(function () {
-                    function saveStepPhoto(objParseFile) {
-                        var step = new Parse.Object("Step");
-                        step.set("order",1);
-                        step.set("photo", objParseFile);
-                        step.set("commit", "first photo in test");
-                        step.set("description", "hello world, I am fablab!");
-                        step.save();
-                    };
-
-                    console.log(1);
-                    var fileUploadControl = $("#fileupload")[0];
-                    console.log(fileUploadControl.files);
-                    if (fileUploadControl.files.length > 0) {
-                        var photoFile = fileUploadControl.files[0];
-                        var name = "photo.jpg";
-                        console.log(2);
-                        var parseFile = new Parse.File(name, photoFile);
-                        parseFile.save().then(function() {
-                            saveStepPhoto(parseFile);
-                            // The file has been saved to Parse.
-                        }, function(error) {
-                            alert(error);
-                            // The file either could not be read, or could not be saved to Parse.
-                        });
-                    };
-                });
+                dropzone();
             }
             //     $('#fileupload').fileupload({
             //         dataType: 'json',
