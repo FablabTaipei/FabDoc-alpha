@@ -19,9 +19,9 @@ $(function() {
 
             $('#dropzone').removeClass('hover');
             
-            if (this.accept && $.inArray(file.type, this.accept.split(/, ?/)) == -1) {
-                return alert('File type not allowed.');
-            }
+            // if (this.accept && $.inArray(file.type, this.accept.split(/, ?/)) == -1) {
+            //     return alert('File type not allowed.');
+            // }
             
             $('#dropzone').addClass('dropped');
             $('#dropzone img').remove();
