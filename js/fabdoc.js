@@ -245,13 +245,14 @@ $(function() {
 
                                 var fileUploadControl = $("#fileupload")[0];
                                 var commit = $("#commit").val();
-
+                                writeConsole("<p>Uploading photo...</p>");
                                 if (fileUploadControl.files.length > 0) {
                                     var photoFile = fileUploadControl.files[0];
                                     var name = "photo.jpg";
                                     var parseFile = new Parse.File(name, photoFile);
                                     // Save photos to Parse cloud first
                                     parseFile.save().then(function() {
+                                        writeConsole("<p>Almost there...</p>");
                                         var step = new Parse.Object("Step");
                                         var project = new Parse.Object("Project");
                                         project.id = id;
@@ -271,6 +272,7 @@ $(function() {
                                             step.set("photo", parseFile);
                                             step.set("commit", commit);
                                             step.save().then(function() {
+                                                writeConsole("<p>Completed.</p>");
                                                 // The file has been saved to Parse.
                                                 addPhotoView.render();
                                                 $container.html(addPhotoView.el);
