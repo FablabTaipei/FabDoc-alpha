@@ -19,8 +19,8 @@ $(function() {
 
             $('#dropzone').removeClass('hover');
             
-            // if (this.accept && $.inArray(file.type, this.accept.split(/, ?/)) == -1) {
-            //     return alert('File type not allowed.');
+            // if (!file.type.match('image.*')) {
+            //     continue;
             // }
             
             $('#dropzone').addClass('dropped');
@@ -88,6 +88,36 @@ $(function() {
             template: Handlebars.compile($('#projects-tpl').html()),
             render: function() { 
                 var collection = { project: this.collection.toJSON() };
+                this.$el.html(this.template(collection));
+            }
+        }),
+
+        Step = Parse.Object.extend('Step'),
+
+        Steps = Parse.Collection.extend({
+            model: Step,
+            query: (new Parse.Query(Step)).ascending('order')
+            // getProjectId: function(id) {
+            //     var matchProject = new Parse.Object("Project");
+            //     matchProject.id = id;
+
+            //     var queryStep = new Parse.Query("Step");
+            //     queryStep.equalTo("project", matchProject);
+            //     console.log("123");
+            //     queryStep.find().then(function(result) {
+            //         return result;
+            //         console.log(result);
+            //         console.log(typeof(result));
+            //     },function(error) {
+            //         alert(error);
+            //     });
+            // }
+        }),
+
+        StepsView = Parse.View.extend({
+            template: Handlebars.compile($('#steps-tpl').html()),
+            render: function() { 
+                var collection = { step: this.collection.toJSON() };
                 this.$el.html(this.template(collection));
             }
         }),
@@ -192,6 +222,7 @@ $(function() {
             // Here you can define some shared variables
             initialize: function(options){
                 this.projects = new Projects();
+                // this.steps = new Steps();
                 // this.categories = new Categories();
             },
             
@@ -214,6 +245,7 @@ $(function() {
                 '': 'index',
                 'index': 'index',
                 'project': 'project',
+                'project/:id': 'step',
                 'shoot/:id': 'shoot',
                 // 'admin': 'admin',
                 'login': 'index',
@@ -243,6 +275,27 @@ $(function() {
                         error: function(projects, error) {
                             console.log(error);
                         }
+                    });
+                }
+            },
+
+            step: function(id) {
+                if (!Parse.User.current()) {
+                    this.navigate('#/', { trigger: true });
+                } else {
+                    var projectQuery = new Parse.Query("Project");
+                    var matchProject = new Parse.Object("Project");
+                    matchProject.id = id;
+
+                    var stepQuery = new Parse.Query("Step").equalTo("project", matchProject).ascending('order');
+                    collection = stepQuery.collection();
+                    // Fetch blogs
+                    collection.fetch().then(function(steps){
+                        // Render blogs
+                        console.log("TEST");
+                        var stepsView = new StepsView({ collection: steps });
+                        stepsView.render();
+                        $container.html(stepsView.el);
                     });
                 }
             },
@@ -281,30 +334,26 @@ $(function() {
                                         var orderMax = 0;
                                         queryStep.equalTo("project", project);
                                         queryStep.descending("order");
-                                        queryStep.first({
-                                            success: function(result) {
-                                                if (typeof(result) !== 'undefined') {
-                                                    orderMax = result.get("order");
-                                                }
-                                                console.log(orderMax);
-                                                step.set("uploadedBy", Parse.User.current());
-                                                step.set("project", project);
-                                                step.set("order", orderMax+1);
-                                                step.set("photo", parseFile);
-                                                step.set("commit", commit);
-                                                // step.set("description", "hello world, I am fablab!");
-                                                step.save().then(function() {
-                                                // The file has been saved to Parse.
-                                                    console.log("Uploaded your photo to Parse!");
-                                                    addPhotoView.render();
-                                                    $container.html(addPhotoView.el);
-                                                }, function(error) {
-                                                    alert(error);
-                                                // The file either could not be read, or could not be saved to Parse.
-                                                });
-                                            },
-                                            error: function() {
+                                        queryStep.first().then(function(result) {
+                                            if (typeof(result) !== 'undefined') {
+                                                orderMax = result.get("order");
                                             }
+                                            console.log(orderMax);
+                                            step.set("uploadedBy", Parse.User.current());
+                                            step.set("project", project);
+                                            step.set("order", orderMax+1);
+                                            step.set("photo", parseFile);
+                                            step.set("commit", commit);
+                                            // step.set("description", "hello world, I am fablab!");
+                                            step.save().then(function() {
+                                            // The file has been saved to Parse.
+                                                console.log("Uploaded your photo to Parse!");
+                                                addPhotoView.render();
+                                                $container.html(addPhotoView.el);
+                                            }, function(error) {
+                                                alert(error);
+                                            // The file either could not be read, or could not be saved to Parse.
+                                            });
                                         });
                                     });
                                 };

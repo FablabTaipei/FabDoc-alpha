@@ -62,6 +62,16 @@
         {{/each}}
     </script>
 
+    <script id="steps-tpl" type="text/x-handlebars-template">
+        {{#each step}}
+        <div class="col-md-12 blog-post">
+            <h2 class="blog-post-title">{{commit}}</h2>
+            <p class="blog-post-meta">{{order}}</p>
+            <div>{{description}}</div>
+        </div>
+        {{/each}}
+    </script>
+
     <script id="create-project-tpl" type="text/x-handlebars-template">
         <div class="col-md-6 col-md-offset-3">
             <form>
