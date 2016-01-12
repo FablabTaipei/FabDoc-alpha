@@ -66,7 +66,7 @@ $(function() {
                     'description': data.description,
                     // Set author to the existing project author if editing, use current user if creating
                     // The same logic goes into the following three fields
-                    'host': this.get('host') || Parse.User.current(),
+                    'host': this.get('host').get('username')
                 }).save(null, {
                     success: function(project) {
                         router.navigate('#/index', { trigger: true });
@@ -94,6 +94,9 @@ $(function() {
 
         AddPhotoView = Parse.View.extend({
             template: Handlebars.compile($('#add-photo-tpl').html()),
+            // events: {
+            //     'click #startAddPhotoBtn': 'addPhoto'
+            // },
             render: function(){
                 this.$el.html(this.template());
             }
@@ -165,7 +168,7 @@ $(function() {
                 var NewProject = Parse.Object.extend("Project");
                 var newProject = new NewProject();
                 var projectACL = new Parse.ACL(user);
-                
+
                 projectACL.setReadAccess(user, true);
                 projectACL.setWriteAccess(user, true);
 
@@ -175,7 +178,7 @@ $(function() {
                 newProject.setACL(projectACL);
 
                 newProject.save().then(function() {
-                    router.navigate('#/shoot', { trigger: true });
+                    router.navigate('#/shoot/'+ newProject.id, { trigger: true });
                 }, function(error) {
                     alert(error);
                 });
@@ -211,7 +214,7 @@ $(function() {
                 '': 'index',
                 'index': 'index',
                 'project': 'project',
-                'shoot': 'shoot',
+                'shoot/:id': 'shoot',
                 // 'admin': 'admin',
                 'login': 'index',
                 'create': 'create',
@@ -244,44 +247,73 @@ $(function() {
                 }
             },
 
-            shoot: function() {
+            shoot: function(id) {
                 if (!Parse.User.current()) {
                     this.navigate('#/', { trigger: true });
                 } else {
-                    var addPhotoView = new AddPhotoView();
-                    addPhotoView.render();
-                    $container.html(addPhotoView.el);
+                    var self = this,
+                        query = new Parse.Query("Project"),
+                        addPhotoView = new AddPhotoView();
 
-                    dropzone();
+                    query.get(id, {
+                        success: function() {
+                            addPhotoView.render();
+                            $container.html(addPhotoView.el);
+                            dropzone();
+                            $('#uploadBtn').click(function (e) {
+                                // Prevent default submit event
+                                e.preventDefault();
 
-                    $('#uploadBtn').click(function (e) {
-                        // Prevent default submit event
-                        e.preventDefault();
+                                var fileUploadControl = $("#fileupload")[0];
+                                var commit = $("#commit").val();
 
-                        console.log(1);
-                        var fileUploadControl = $("#fileupload")[0];
-                        console.log(fileUploadControl.files);
-                        if (fileUploadControl.files.length > 0) {
-                            var photoFile = fileUploadControl.files[0];
-                            var name = "photo.jpg";
-                            var parseFile = new Parse.File(name, photoFile);
-                            parseFile.save().then(function() {
-                                var step = new Parse.Object("Step");
-                                console.log(2);
-                                step.set("order",1);
-                                step.set("photo", parseFile);
-                                step.set("commit", "first photo in test");
-                                step.set("description", "hello world, I am fablab!");
-                                step.save().then(function() {
-                                // The file has been saved to Parse.
-                                    addPhotoView.render();
-                                    $container.html(addPhotoView.el);
-                                }, function(error) {
-                                    alert(error);
-                                // The file either could not be read, or could not be saved to Parse.
-                                });
+                                if (fileUploadControl.files.length > 0) {
+                                    var photoFile = fileUploadControl.files[0];
+                                    var name = "photo.jpg";
+                                    var parseFile = new Parse.File(name, photoFile);
+
+                                    parseFile.save().then(function() {
+                                        var step = new Parse.Object("Step");
+                                        var project = new Parse.Object("Project");
+                                        project.id = id;
+
+                                        var queryStep = new Parse.Query("Step");
+                                        var orderMax = 0;
+                                        queryStep.equalTo("project", project);
+                                        queryStep.descending("order");
+                                        queryStep.first({
+                                            success: function(result) {
+                                                if (typeof(result) !== 'undefined') {
+                                                    orderMax = result.get("order");
+                                                }
+                                                console.log(orderMax);
+                                                step.set("uploadedBy", Parse.User.current());
+                                                step.set("project", project);
+                                                step.set("order", orderMax+1);
+                                                step.set("photo", parseFile);
+                                                step.set("commit", commit);
+                                                // step.set("description", "hello world, I am fablab!");
+                                                step.save().then(function() {
+                                                // The file has been saved to Parse.
+                                                    console.log("Uploaded your photo to Parse!");
+                                                    addPhotoView.render();
+                                                    $container.html(addPhotoView.el);
+                                                }, function(error) {
+                                                    alert(error);
+                                                // The file either could not be read, or could not be saved to Parse.
+                                                });
+                                            },
+                                            error: function() {
+                                            }
+                                        });
+                                    });
+                                };
                             });
-                        };
+                        },
+                        error: function() {
+                            alert("Please add new project or choose existing one");
+                            self.navigate('#/project', { trigger: true });
+                        }
                     });
                 }
             },
