@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html>
+
 <head>
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=no">
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
     <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
@@ -8,15 +13,14 @@
     <script type="text/javascript" src="js/parse-1.2.19.min.js"></script>
     <script type="text/javascript" src="js/handlebars.min.js"></script>
     <!-- 
-    <script type="text/javascript" src="js/vendor/jquery.ui.widget.js"></script>
-    <script type="text/javascript" src="js/jquery.iframe-transport.js"></script>
-    <script type="text/javascript" src="js/jquery.fileupload.js"></script>
-    -->
+        <script type="text/javascript" src="js/vendor/jquery.ui.widget.js"></script>
+        <script type="text/javascript" src="js/jquery.iframe-transport.js"></script>
+        <script type="text/javascript" src="js/jquery.fileupload.js"></script>
+        -->
     <script type="text/javascript">
-      	// Initialize Parse with your Parse application javascript keys
-  	    function writeConsole(msg) {
-  	        $("#consoleTest").append(msg);
-	     }
+    function writeConsole(msg) {
+        $("#consoleTest").append(msg);
+    }
     </script>
 </head>
 
@@ -24,7 +28,7 @@
     <div class="container" style="text-align: center;">
         <img src="image/Fablab-Taipei-Logo.png" alt="Fablab-Taipei-Logo" style="margin: 50px;" />
     </div>
-
+    
     <div class="main-container"></div>
 
     <script id="login-tpl" type="text/x-handlebars-template">
@@ -48,7 +52,7 @@
             </form>
         </div>
     </script>
-
+    
     <script id="projects-tpl" type="text/x-handlebars-template">
         <div class="col-md-12 blog-post">
             <h2 class="blog-post-title"><a href="#/create">Add New Project</a></h2>
@@ -61,7 +65,7 @@
         </div>
         {{/each}}
     </script>
-
+    
     <script id="steps-tpl" type="text/x-handlebars-template">
         {{#each step}}
         <div class="col-md-12 blog-post">
@@ -71,7 +75,7 @@
         </div>
         {{/each}}
     </script>
-
+    
     <script id="create-project-tpl" type="text/x-handlebars-template">
         <div class="col-md-6 col-md-offset-3">
             <form>
@@ -89,13 +93,13 @@
             </form>
         </div>
     </script>
-
+    
     <script id="add-photo-tpl" type="text/x-handlebars-template">
         <div class="col-md-6 col-md-offset-3">
             <form>
                 <div class="form-group" id="dropzone">
                     <div>Add Photo</div>
-                    <input name="file" type="file"  id="fileupload" accept="image/*" />
+                    <input name="file" type="file" id="fileupload" accept="image/*" />
                 </div>
                 <div class="form-group">
                     <label for="commit">Commit</label>
@@ -108,59 +112,57 @@
         </div>
         <style type="text/css">
         #dropzone {
-          border: 10px dotted #888;
-          border-radius: 20px;
-          color: #888;
-          font: bold 24px/200px arial;
-          height: 200px;
-          margin: 30px auto;
-          text-align: center;
-          width: 200px;
-
-          position: relative;
+            border: 10px dotted #888;
+            border-radius: 20px;
+            color: #888;
+            font: bold 24px/200px arial;
+            height: 200px;
+            margin: 30px auto;
+            text-align: center;
+            width: 200px;
+            position: relative;
         }
         
         #dropozne div {
-          width: inherit;
-          height: inherit;
-          margin-left: -10px;
-          margin-top: -10px;
+            width: inherit;
+            height: inherit;
+            margin-left: -10px;
+            margin-top: -10px;
         }
-
+        
         #dropzone.hover {
-          border: 10px solid #222;
-          color: #222;
+            border: 10px solid #222;
+            color: #222;
         }
-
+        
         #dropzone.dropped {
-          background: #222;
-          border: 10px solid #222;
+            background: #222;
+            border: 10px solid #222;
         }
-
+        
         #dropzone img {
-          border-radius: 10px;
-          vertical-align: middle;
-          max-width: 95%;
-          max-height: 95%;
+            border-radius: 10px;
+            vertical-align: middle;
+            max-width: 95%;
+            max-height: 95%;
         }
-
+        
         #dropzone [type="file"] {
-          cursor: pointer;
-          position: absolute;
-          opacity: 0;
-          top: 0;
-          right: 0;
-          bottom: 0;
-          left: 0;
-
-          width: inherit;
-          height: inherit;
-          margin-left: -10px;
-          margin-top: -10px;
+            cursor: pointer;
+            position: absolute;
+            opacity: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            width: inherit;
+            height: inherit;
+            margin-left: -10px;
+            margin-top: -10px;
         }
         </style>
     </script>
-
     <script type="text/javascript" src="js/fabdoc.js"></script>
 </body>
+
 </html>
