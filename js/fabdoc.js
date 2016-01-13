@@ -239,6 +239,7 @@ $(function() {
                             $container.html(addPhotoView.el);
                             // Render dropzone and wait for file dropping or adding
                             dropzone();
+                            // Click event to start uploading
                             $('#uploadBtn').click(function (e) {
                                 // Prevent default submit event
                                 e.preventDefault();
@@ -270,6 +271,7 @@ $(function() {
                                             step.set("project", project);
                                             step.set("order", orderMax+1);
                                             step.set("photo", parseFile);
+                                            step.set("imgUrl", parseFile.url());
                                             step.set("commit", commit);
                                             step.save().then(function() {
                                                 writeConsole("<p>Completed.</p>");

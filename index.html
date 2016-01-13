@@ -58,6 +58,7 @@
             <h2 class="blog-post-title"><a href="#/create">Add New Project</a></h2>
         </div>
         {{#each project}}
+        <br>
         <div class="col-md-12 blog-post">
             <h2 class="blog-post-title"><a href="#/project/{{objectId}}">{{title}}</a></h2>
             <p class="blog-post-meta">by {{host}}</p>
@@ -68,9 +69,11 @@
     
     <script id="steps-tpl" type="text/x-handlebars-template">
         {{#each step}}
+        <br>
         <div class="col-md-12 blog-post">
             <h2 class="blog-post-title">{{commit}}</h2>
             <p class="blog-post-meta">{{order}}</p>
+            <img src="{{imgUrl}}" class="img-rounded">
             <div>{{description}}</div>
         </div>
         {{/each}}
