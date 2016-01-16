@@ -9,7 +9,7 @@ $(function() {
     //   ======================================================================
     Parse.initialize("RU4BgvMuXnlkHDle7VH9EKMapirGjza9Gh3ZgrAR","3ev5gFZeFKSVG6ZPQysKJuK7ncyPIMp6Q2erPJ17");
 
-    function dropzone() {
+    var dropzone = function() {
         $('#dropzone').on('dragover', function() {
             $(this).addClass('hover');
         });
@@ -276,12 +276,11 @@ $(function() {
                                             step.set("imgUrl", parseFile.url());
                                             step.set("commit", commit);
                                             step.save().then(function() {
-                                                writeConsole("<p>Completed.</p>");
                                                 // The file has been saved to Parse.
-                                                addPhotoView.render();
-                                                $container.html(addPhotoView.el);
-                                                $("#project-id").append('<a href="#/project/'+id+'">Edit Steps</a>');
-                                                dropzone();
+                                                writeConsole("<p>Completed.</p>");
+                                                // Render again
+                                                Parse.history.stop();
+                                                Parse.history.start();
                                             }, function(error) {
                                                 // The file either could not be read, or could not be saved to Parse.
                                                 alert(error);
