@@ -68,20 +68,22 @@
     </script>
     
     <script id="steps-tpl" type="text/x-handlebars-template">
+        <div class="col-md-12 blog-post">
+            <h2 class="blog-post-title" id="add-new-steps"></h2>
+        </div>
         {{#each step}}
         <br>
         <div class="col-md-12 blog-post">
             <h2 class="blog-post-title">{{commit}}</h2>
             <p class="blog-post-meta">step #{{order}}</p>
-            <img src="{{imgUrl}}" class="img-rounded" 
-                style="height: auto; width: auto; max-width: 300px; max-height: 300px;">
+            <img src="{{imgUrl}}" class="img-rounded img-responsive" 
+                style="height: auto; width: auto; max-width: 400px; max-height: 300px;">
             <div>{{description}}</div>
         </div>
         {{/each}}
         <br>
         <div class="col-md-12 blog-post">
-            <p class="blog-post-title" id="add-new-steps"></p>
-            <p class="blog-post-title"><a href="#/project/">Back to Project List</a></p>
+            <h2 class="blog-post-title"><a href="#/project/">Back to Project List</a></h2>
         </div>
     </script>
     
@@ -118,7 +120,7 @@
                     <button type="submit" class="btn btn-default start" id="uploadBtn">Start upload</button>
                 </div>
                 <div class="col-md-12 blog-post">
-                    <p class="blog-post" id="project-id"></p>
+                    <h2 class="blog-post" id="back-to-edit"></h2>
                 </div>
                 <div id="consoleTest"></div>
             </form>

@@ -239,7 +239,7 @@ $(function() {
                             addPhotoView.render();
                             $container.html(addPhotoView.el);
                             // Render dropzone and wait for file dropping or adding
-                            $("#project-id").append('<a href="#/project/'+id+'">Edit Steps</a>');
+                            $("#back-to-edit").append('<a href="#/project/'+id+'">Edit Steps</a>');
                             dropzone();
                             // Click event to start uploading
                             $('#uploadBtn').click(function (e) {
