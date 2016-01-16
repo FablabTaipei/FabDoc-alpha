@@ -29,7 +29,7 @@ $(function() {
                 reader.readAsDataURL(file);
                 reader.onload = function(e) {
                     var data = e.target.result,
-                        $img = $('<img />').attr('src', data).fadeIn();
+                        $img = $('<img />').attr('src', data).width(150).height(150).fadeIn();
                     $('#dropzone div').html($img);
                 };
             } else {
@@ -238,6 +238,7 @@ $(function() {
                             addPhotoView.render();
                             $container.html(addPhotoView.el);
                             // Render dropzone and wait for file dropping or adding
+                            $("#project-id").append('<a href="#/project/'+id+'">Edit Steps</a>');
                             dropzone();
                             // Click event to start uploading
                             $('#uploadBtn').click(function (e) {
