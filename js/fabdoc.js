@@ -29,7 +29,7 @@ $(function() {
                 reader.readAsDataURL(file);
                 reader.onload = function(e) {
                     var data = e.target.result,
-                        $img = $('<img />').attr('src', data).fadeIn();
+                        $img = $('<img />').attr('src', data).width(150).height(150).fadeIn();
                     $('#dropzone div').html($img);
                 };
             } else {
@@ -222,6 +222,7 @@ $(function() {
                         var stepsView = new StepsView({ collection: steps });
                         stepsView.render();
                         $container.html(stepsView.el);
+                        $("#add-new-steps").append('<a href="#/shoot/'+id+'">Add New Steps</a>');
                     });
                 }
             },
@@ -238,7 +239,9 @@ $(function() {
                             addPhotoView.render();
                             $container.html(addPhotoView.el);
                             // Render dropzone and wait for file dropping or adding
+                            $("#project-id").append('<a href="#/project/'+id+'">Edit Steps</a>');
                             dropzone();
+                            // Click event to start uploading
                             $('#uploadBtn').click(function (e) {
                                 // Prevent default submit event
                                 e.preventDefault();
@@ -270,12 +273,15 @@ $(function() {
                                             step.set("project", project);
                                             step.set("order", orderMax+1);
                                             step.set("photo", parseFile);
+                                            step.set("imgUrl", parseFile.url());
                                             step.set("commit", commit);
                                             step.save().then(function() {
                                                 writeConsole("<p>Completed.</p>");
                                                 // The file has been saved to Parse.
                                                 addPhotoView.render();
                                                 $container.html(addPhotoView.el);
+                                                $("#project-id").append('<a href="#/project/'+id+'">Edit Steps</a>');
+                                                dropzone();
                                             }, function(error) {
                                                 // The file either could not be read, or could not be saved to Parse.
                                                 alert(error);
