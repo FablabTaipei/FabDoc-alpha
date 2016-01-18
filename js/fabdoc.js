@@ -143,6 +143,7 @@ $(function() {
                 projectACL.setWriteAccess(user, true);
 
                 newProject.set("host", user);
+                newProject.set("hostName", user.attributes.username);
                 newProject.set("title", title);
                 newProject.set("description", description);
                 newProject.setACL(projectACL);
@@ -223,20 +224,31 @@ $(function() {
                         stepsView.render();
                         $container.html(stepsView.el);
                         $("#add-new-steps").append('<a href="#/shoot/'+id+'">Add New Steps</a>');
+                        // If click "Edit", modal would show up
+                        $('#edit-step').on('show.bs.modal', function (event) {
+                            var button = $(event.relatedTarget);
+                            var order = button.data('order');
+                            var description = button.data('description');
+                            var code = button.data('code-link');
 
-                        $('#save-step-btn').click(function (e) {
-                            var step = new Parse.Object("Step");
-                            var order = $('#save-step-btn').data("step-order");
-                            step.id = steps.models[order-1].id;
+                            var modal = $(this);
+                            modal.find('.modal-title').text('Step ' + order);
+                            modal.find('.modal-body #description-text').val(description);
+                            modal.find('.modal-body #code-text').val(code);
 
-                            step.set('description', $("#description-text").val());
-                            step.set('code', $("#code-text").val());
-                            step.save().then(function() {
-                                Parse.history.stop();
-                                Parse.history.start();
-                                $('.modal').modal('hide');
-                            }, function(e) {
-                                console.log(e);
+                            $('#save-step-btn').click(function (e) {
+                                var step = new Parse.Object("Step");
+                                step.id = steps.models[order-1].id;
+
+                                step.set('description', $("#description-text").val());
+                                step.set('code', $("#code-text").val());
+                                step.save().then(function() {
+                                    $('.modal').modal('hide');
+                                    Parse.history.stop();
+                                    Parse.history.start();
+                                }, function(e) {
+                                    console.log(e);
+                                });
                             });
                         });
                     });
