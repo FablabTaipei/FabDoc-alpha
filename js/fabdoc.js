@@ -39,7 +39,7 @@ $(function() {
         });
     };
 
-    var $container = $('.main-container'),
+    var $container = $('#main-container'),
 
         Project = Parse.Object.extend('Project'),
         Projects = Parse.Collection.extend({
