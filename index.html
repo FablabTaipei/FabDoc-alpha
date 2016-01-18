@@ -78,7 +78,7 @@
             <h3 class="blog-post-title">Step {{order}}: {{commit}}</h3>
             <div class="row-fluid">
                 <div class="col-md-4">
-                    <img src="{{imgUrl}}" class="img-rounded img-responsive" style="height: auto; width: auto; max-width: 400px;">
+                    <img src="{{imgUrl}}" class="img-rounded img-responsive" style="image-orientation: from-image; height: auto; width: auto; max-width: 400px;">
                 </div>
                 <div class="col-md-4 col-md-offset-2">
                     <div class="row-fluid">
@@ -90,32 +90,32 @@
                         <p class="blog-post-meta">{{code}}</p>
                     </div>
                     <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#edit-step-{{order}}" data-backdrop="false" data-keyboard="false">
+                    <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#edit-step" data-order="{{order}}" data-description="{{description}}" data-code-link="{{code}}" data-backdrop="false" data-keyboard="false">
                         Edit
                     </button>
                     <!-- Modal -->
-                    <div class="modal fade" id="edit-step-{{order}}" tabindex="-1" role="dialog" aria-labelledby="step-order">
+                    <div class="modal fade" id="edit-step" tabindex="-1" role="dialog" aria-labelledby="step-order">
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title" id="step-order">Step {{order}}</h4>
+                                    <h4 class="modal-title" id="step-order"></h4>
                                 </div>
                                 <div class="modal-body">
                                     <form>
                                         <div class="form-group">
                                             <label for="description-text" class="control-label">description</label>
-                                            <textarea class="form-control" id="description-text">{{description}}</textarea>
+                                            <textarea class="form-control" id="description-text"></textarea>
                                         </div>
                                         <div class="form-group">
                                             <label for="code-text" class="control-label">code link</label>
-                                            <textarea class="form-control" id="code-text">{{code}}</textarea>
+                                            <textarea class="form-control" id="code-text"></textarea>
                                         </div>
                                     </form>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary" id="save-step-btn" data-step-order="{{order}}">Save changes</button>
+                                    <button type="button" class="btn btn-primary" id="save-step-btn">Save changes</button>
                                 </div>
                             </div>
                         </div>
@@ -162,10 +162,10 @@
                 <div class="form-group" style="text-align: center;">
                     <button type="submit" class="btn btn-default start" id="uploadBtn">Start upload</button>
                 </div>
+                <div id="consoleTest"></div>
                 <div class="col-md-12 blog-post">
                     <h2 class="blog-post" id="back-to-edit"></h2>
                 </div>
-                <div id="consoleTest"></div>
             </form>
         </div>
         <style type="text/css">
