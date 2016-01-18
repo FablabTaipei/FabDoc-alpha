@@ -39,7 +39,7 @@ $(function() {
         });
     };
 
-    var $container = $('.main-container'),
+    var $container = $('#main-container'),
 
         Project = Parse.Object.extend('Project'),
         Projects = Parse.Collection.extend({
@@ -223,6 +223,22 @@ $(function() {
                         stepsView.render();
                         $container.html(stepsView.el);
                         $("#add-new-steps").append('<a href="#/shoot/'+id+'">Add New Steps</a>');
+
+                        $('#save-step-btn').click(function (e) {
+                            var step = new Parse.Object("Step");
+                            var order = $('#save-step-btn').data("step-order");
+                            step.id = steps.models[order-1].id;
+
+                            step.set('description', $("#description-text").val());
+                            step.set('code', $("#code-text").val());
+                            step.save().then(function() {
+                                Parse.history.stop();
+                                Parse.history.start();
+                                $('.modal').modal('hide');
+                            }, function(e) {
+                                console.log(e);
+                            });
+                        });
                     });
                 }
             },
@@ -266,7 +282,7 @@ $(function() {
                                         queryStep.descending("order");
                                         queryStep.first().then(function(result) {
                                             if (typeof(result) !== 'undefined') {
-                                                // Onlt if this is a existing project
+                                                // Onlt if this is an existing project
                                                 orderMax = result.get("order");
                                             }
                                             step.set("uploadedBy", Parse.User.current());
