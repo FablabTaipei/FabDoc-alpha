@@ -143,6 +143,7 @@ $(function() {
                 projectACL.setWriteAccess(user, true);
 
                 newProject.set("host", user);
+                newProject.set("hostName", user.attributes.username);
                 newProject.set("title", title);
                 newProject.set("description", description);
                 newProject.setACL(projectACL);
