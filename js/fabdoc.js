@@ -9,6 +9,37 @@ $(function() {
     //   ======================================================================
     Parse.initialize("RU4BgvMuXnlkHDle7VH9EKMapirGjza9Gh3ZgrAR","3ev5gFZeFKSVG6ZPQysKJuK7ncyPIMp6Q2erPJ17");
 
+    function getOrientation(file, callback) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+
+            var view = new DataView(e.target.result);
+            if (view.getUint16(0, false) != 0xFFD8) return callback(-2);
+            var length = view.byteLength, offset = 2;
+            while (offset < length) {
+                var marker = view.getUint16(offset, false);
+                offset += 2;
+                if (marker == 0xFFE1) {
+                    if (view.getUint32(offset += 2, false) != 0x45786966) callback(-1);
+                    var little = view.getUint16(offset += 6, false) == 0x4949;
+                    offset += view.getUint32(offset + 4, little);
+                    var tags = view.getUint16(offset, little);
+                    offset += 2;
+                    for (var i = 0; i < tags; i++)
+                        if (view.getUint16(offset + (i * 12), little) == 0x0112)
+                            return callback(view.getUint16(offset + (i * 12) + 8, little));
+                }
+                else if ((marker & 0xFF00) != 0xFF00) break;
+                else offset += view.getUint16(offset, false);
+            }
+            return callback(-1);
+        };
+        reader.readAsArrayBuffer(file.slice(0, 64 * 1024));
+    }
+
+    window._currentImage = null;
+    window._transformCanvas = null;
+
     var dropzone = function() {
         $('#dropzone').on('dragover', function() {
             $(this).addClass('hover');
@@ -29,9 +60,40 @@ $(function() {
                 reader.readAsDataURL(file);
                 reader.onload = function(e) {
                     var data = e.target.result,
-                        $img = $('<img />').attr('src', data).width(150).height(150).fadeIn();
+                        $img = $('<img />').attr('src', data).width('100%').fadeIn(),
+                        $imgOriginal = $('<img />').attr('src', data);
                     $('#dropzone div').html($img);
+                    _currentImage = $imgOriginal[0];
+                    getOrientation(file, function(orientation){
+                        if(orientation > 1){
+                            // var canvas = document.getElementById('testCanvas');
+                            var canvas = document.createElement('canvas');
+                            var context = canvas.getContext('2d');
+                            var width = _currentImage.width;
+                            var height = _currentImage.height;
+                            if(orientation == 3){
+                                canvas.width = width;
+                                canvas.height = height;
+                                context.transform(-1, 0, 0, -1, width, height);
+                            }else if(orientation == 6){
+                                // context.rotate(180);
+                                canvas.width = height;
+                                canvas.height = width;
+                                context.transform(0, 1, -1, 0, height , 0);
+                            }else if(orientation == 8){
+                                canvas.width = height;
+                                canvas.height = width;
+                                context.transform(0, -1, 1, 0, 0, width);
+                            }
+                            context.drawImage(_currentImage, 0, 0);
+                            // alert(orientation);
+                            _transformCanvas = canvas;
+                        }
+                    });
                 };
+                // getOrientation(file, function(a){
+                //     alert(a);
+                // });
             } else {
                 var ext = file.name.split('.').pop();
                 $('#dropzone div').html(ext);
@@ -276,45 +338,55 @@ $(function() {
 
                                 var fileUploadControl = $("#fileupload")[0];
                                 var commit = $("#commit").val();
+                                // aaa.ddd();
                                 writeConsole("<p>Uploading photo...</p>");
                                 if (fileUploadControl.files.length > 0) {
-                                    var photoFile = fileUploadControl.files[0];
-                                    var name = "photo.jpg";
-                                    var parseFile = new Parse.File(name, photoFile);
-                                    // Save photos to Parse cloud first
-                                    parseFile.save().then(function() {
-                                        writeConsole("<p>Almost there...</p>");
-                                        var step = new Parse.Object("Step");
-                                        var project = new Parse.Object("Project");
-                                        project.id = id;
+                                    var toDoUpload = function(theFile){
+                                        var name = "photo.jpg";
+                                        var parseFile = new Parse.File(name, theFile);
+                                        // Save photos to Parse cloud first
+                                        parseFile.save().then(function() {
+                                            writeConsole("<p>Almost there...</p>");
+                                            var step = new Parse.Object("Step");
+                                            var project = new Parse.Object("Project");
+                                            project.id = id;
 
-                                        var queryStep = new Parse.Query("Step");
-                                        var orderMax = 0;
-                                        queryStep.equalTo("project", project);
-                                        queryStep.descending("order");
-                                        queryStep.first().then(function(result) {
-                                            if (typeof(result) !== 'undefined') {
-                                                // Onlt if this is an existing project
-                                                orderMax = result.get("order");
-                                            }
-                                            step.set("uploadedBy", Parse.User.current());
-                                            step.set("project", project);
-                                            step.set("order", orderMax+1);
-                                            step.set("photo", parseFile);
-                                            step.set("imgUrl", parseFile.url());
-                                            step.set("commit", commit);
-                                            step.save().then(function() {
-                                                // The file has been saved to Parse.
-                                                writeConsole("<p>Completed.</p>");
-                                                // Render again
-                                                Parse.history.stop();
-                                                Parse.history.start();
-                                            }, function(error) {
-                                                // The file either could not be read, or could not be saved to Parse.
-                                                alert(error);
+                                            var queryStep = new Parse.Query("Step");
+                                            var orderMax = 0;
+                                            queryStep.equalTo("project", project);
+                                            queryStep.descending("order");
+                                            queryStep.first().then(function(result) {
+                                                if (typeof(result) !== 'undefined') {
+                                                    // Onlt if this is an existing project
+                                                    orderMax = result.get("order");
+                                                }
+                                                step.set("uploadedBy", Parse.User.current());
+                                                step.set("project", project);
+                                                step.set("order", orderMax+1);
+                                                step.set("photo", parseFile);
+                                                step.set("imgUrl", parseFile.url());
+                                                step.set("commit", commit);
+                                                step.save().then(function() {
+                                                    // The file has been saved to Parse.
+                                                    writeConsole("<p>Completed.</p>");
+                                                    // Render again
+                                                    Parse.history.stop();
+                                                    Parse.history.start();
+                                                    _transformCanvas = null;
+                                                }, function(error) {
+                                                    // The file either could not be read, or could not be saved to Parse.
+                                                    alert(error);
+                                                });
                                             });
                                         });
-                                    });
+                                    };
+                                    if(_transformCanvas){
+                                        _transformCanvas.toBlob(function(blob){
+                                            toDoUpload(new File([blob], "name"));
+                                        });
+                                    }else{
+                                        toDoUpload(fileUploadControl.files[0]);
+                                    }
                                 };
                             });
                         },
