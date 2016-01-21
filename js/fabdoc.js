@@ -9,34 +9,6 @@ $(function() {
     //   ======================================================================
     Parse.initialize("RU4BgvMuXnlkHDle7VH9EKMapirGjza9Gh3ZgrAR","3ev5gFZeFKSVG6ZPQysKJuK7ncyPIMp6Q2erPJ17");
 
-    function getOrientation(file, callback) {
-        var reader = new FileReader();
-        reader.onload = function(e) {
-
-            var view = new DataView(e.target.result);
-            if (view.getUint16(0, false) != 0xFFD8) return callback(-2);
-            var length = view.byteLength, offset = 2;
-            while (offset < length) {
-                var marker = view.getUint16(offset, false);
-                offset += 2;
-                if (marker == 0xFFE1) {
-                    if (view.getUint32(offset += 2, false) != 0x45786966) callback(-1);
-                    var little = view.getUint16(offset += 6, false) == 0x4949;
-                    offset += view.getUint32(offset + 4, little);
-                    var tags = view.getUint16(offset, little);
-                    offset += 2;
-                    for (var i = 0; i < tags; i++)
-                        if (view.getUint16(offset + (i * 12), little) == 0x0112)
-                            return callback(view.getUint16(offset + (i * 12) + 8, little));
-                }
-                else if ((marker & 0xFF00) != 0xFF00) break;
-                else offset += view.getUint16(offset, false);
-            }
-            return callback(-1);
-        };
-        reader.readAsArrayBuffer(file.slice(0, 64 * 1024));
-    }
-
     window._currentImage = null;
     window._transformCanvas = null;
 
@@ -63,33 +35,33 @@ $(function() {
                         $img = $('<img />').attr('src', data).width('100%').fadeIn(),
                         $imgOriginal = $('<img />').attr('src', data);
                     $('#dropzone div').html($img);
-                    _currentImage = $imgOriginal[0];
-                    getOrientation(file, function(orientation){
-                        if(orientation > 1){
-                            // var canvas = document.getElementById('testCanvas');
-                            var canvas = document.createElement('canvas');
-                            var context = canvas.getContext('2d');
-                            var width = _currentImage.width;
-                            var height = _currentImage.height;
-                            if(orientation == 3){
-                                canvas.width = width;
-                                canvas.height = height;
-                                context.transform(-1, 0, 0, -1, width, height);
-                            }else if(orientation == 6){
-                                // context.rotate(180);
-                                canvas.width = height;
-                                canvas.height = width;
-                                context.transform(0, 1, -1, 0, height , 0);
-                            }else if(orientation == 8){
-                                canvas.width = height;
-                                canvas.height = width;
-                                context.transform(0, -1, 1, 0, 0, width);
-                            }
-                            context.drawImage(_currentImage, 0, 0);
-                            // alert(orientation);
-                            _transformCanvas = canvas;
-                        }
-                    });
+                    // _currentImage = $imgOriginal[0];
+                    // getOrientation(file, function(orientation){
+                    //     if(orientation > 1){
+                    //         // var canvas = document.getElementById('testCanvas');
+                    //         var canvas = document.createElement('canvas');
+                    //         var context = canvas.getContext('2d');
+                    //         var width = _currentImage.width;
+                    //         var height = _currentImage.height;
+                    //         if(orientation == 3){
+                    //             canvas.width = width;
+                    //             canvas.height = height;
+                    //             context.transform(-1, 0, 0, -1, width, height);
+                    //         }else if(orientation == 6){
+                    //             // context.rotate(180);
+                    //             canvas.width = height;
+                    //             canvas.height = width;
+                    //             context.transform(0, 1, -1, 0, height , 0);
+                    //         }else if(orientation == 8){
+                    //             canvas.width = height;
+                    //             canvas.height = width;
+                    //             context.transform(0, -1, 1, 0, 0, width);
+                    //         }
+                    //         context.drawImage(_currentImage, 0, 0);
+                    //         // alert(orientation);
+                    //         _transformCanvas = canvas;
+                    //     }
+                    // });
                 };
                 // getOrientation(file, function(a){
                 //     alert(a);
@@ -313,6 +285,10 @@ $(function() {
                                 });
                             });
                         });
+
+                        // to do rotation
+                        doRotation();
+
                     });
                 }
             },
@@ -380,13 +356,14 @@ $(function() {
                                             });
                                         });
                                     };
-                                    if(_transformCanvas){
-                                        _transformCanvas.toBlob(function(blob){
-                                            toDoUpload(new File([blob], "name"));
-                                        });
-                                    }else{
-                                        toDoUpload(fileUploadControl.files[0]);
-                                    }
+                                    // if(_transformCanvas){
+                                    //     _transformCanvas.toBlob(function(blob){
+                                    //         toDoUpload(new File([blob], "name"));
+                                    //     });
+                                    // }else{
+                                    //     toDoUpload(fileUploadControl.files[0]);
+                                    // }
+                                    toDoUpload(fileUploadControl.files[0]);
                                 };
                             });
                         },
@@ -410,4 +387,130 @@ $(function() {
         router = new Router();
 
     router.start();
+
 });
+
+function getOrientation(file, callback) {
+    // var reader = new FileReader();
+    // reader.onload = function(e) {
+
+    //     var view = new DataView(e.target.result);
+    //     if (view.getUint16(0, false) != 0xFFD8) return callback(-2);
+    //     var length = view.byteLength, offset = 2;
+    //     while (offset < length) {
+    //         var marker = view.getUint16(offset, false);
+    //         offset += 2;
+    //         if (marker == 0xFFE1) {
+    //             if (view.getUint32(offset += 2, false) != 0x45786966) callback(-1);
+    //             var little = view.getUint16(offset += 6, false) == 0x4949;
+    //             offset += view.getUint32(offset + 4, little);
+    //             var tags = view.getUint16(offset, little);
+    //             offset += 2;
+    //             for (var i = 0; i < tags; i++)
+    //                 if (view.getUint16(offset + (i * 12), little) == 0x0112)
+    //                     return callback(view.getUint16(offset + (i * 12) + 8, little));
+    //         }
+    //         else if ((marker & 0xFF00) != 0xFF00) break;
+    //         else offset += view.getUint16(offset, false);
+    //     }
+    //     return callback(-1);
+    // };
+    // reader.readAsArrayBuffer(file.slice(0, 64 * 1024));
+
+    // var base64 = file.split(',').pop();
+    // var binary_string = atob(base64);
+    // var len = binary_string.length;
+    // var bytes = new Uint8Array( len );
+    // for (var i = 0; i < len; i++)        {
+    //     bytes[i] = binary_string.charCodeAt(i);
+    // }
+    // var view = new DataView(bytes.buffer);
+    var view = new DataView(file);
+    if (view.getUint16(0, false) != 0xFFD8) return callback(-2);
+    var length = view.byteLength, offset = 2;
+    while (offset < length) {
+        var marker = view.getUint16(offset, false);
+        offset += 2;
+        if (marker == 0xFFE1) {
+            if (view.getUint32(offset += 2, false) != 0x45786966) callback(-1);
+            var little = view.getUint16(offset += 6, false) == 0x4949;
+            offset += view.getUint32(offset + 4, little);
+            var tags = view.getUint16(offset, little);
+            offset += 2;
+            for (var i = 0; i < tags; i++)
+                if (view.getUint16(offset + (i * 12), little) == 0x0112)
+                    return callback(view.getUint16(offset + (i * 12) + 8, little));
+        }
+        else if ((marker & 0xFF00) != 0xFF00) break;
+        else offset += view.getUint16(offset, false);
+    }
+    return callback(-1);
+}
+
+function doRotation(){
+    // xhr.responseType = 'arraybuffer';
+    $('.blog-post img').each(function(){
+        // "this" is natave imgae
+        // var originCanvas = document.createElement('canvas');
+        // var originContext = originCanvas.getContext('2d'); 
+        // var w = this.width;
+        // var h = this.height;
+        // // canvas.width = this.width;
+        // // canvas.height = this.height;
+        // originCanvas.width = w; originCanvas.height = h;
+        // originContext.drawImage(this,0,0,w,h);
+        
+        var newimg = new Image();
+        // fix this bug: Uncaught SecurityError: Failed to execute 'toDataURL' on 'HTMLCanvasElement': Tainted canvases may not be exported.
+        newimg.setAttribute('crossOrigin', 'anonymous');
+        newimg.onload = (function(scope, origin){
+            return function(){
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', scope.src, true);
+                xhr.responseType = 'arraybuffer';
+                xhr.onload = (function(img, originImage){
+                    return function(e) {
+                      getOrientation(this.response, function(orientation){
+                        if(orientation > 1){
+                            $(originImage).hide();
+                            // var canvas = document.getElementById('testCanvas');
+                            var canvas = document.createElement('canvas');
+                            var context;
+                            var width = img.width;
+                            var height = img.height;
+                            if(orientation == 3){
+                                canvas.width = width;
+                                canvas.height = height;
+                                context = canvas.getContext('2d');
+                                context.transform(-1, 0, 0, -1, width, height);
+                            }else if(orientation == 6){
+                                // context.rotate(180);
+                                canvas.width = height;
+                                canvas.height = width;
+                                context = canvas.getContext('2d');
+                                context.transform(0, 1, -1, 0, height , 0);
+                            }else if(orientation == 8){
+                                canvas.width = height;
+                                canvas.height = width;
+                                context = canvas.getContext('2d');
+                                context.transform(0, -1, 1, 0, 0, width);
+                            }
+                            context.drawImage(img, 0, 0);
+                            // alert(orientation);
+                            // _transformCanvas = canvas;
+                            var url = canvas.toDataURL();
+                            originImage.src = url;
+                            $(originImage).show();
+                        }
+                      });
+                    };
+                })(scope, origin);
+                xhr.send();
+            };
+        })(newimg, this);
+
+        newimg.src = this.src;
+
+    });
+}
+
