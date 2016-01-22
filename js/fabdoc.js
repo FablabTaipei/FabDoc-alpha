@@ -459,7 +459,7 @@ function doRotation(){
         // // canvas.height = this.height;
         // originCanvas.width = w; originCanvas.height = h;
         // originContext.drawImage(this,0,0,w,h);
-        
+
         var newImg = new Image();
         // fix this bug: Uncaught SecurityError: Failed to execute 'toDataURL' on 'HTMLCanvasElement': Tainted canvases may not be exported.
         newImg.setAttribute('crossOrigin', 'anonymous');
@@ -512,7 +512,7 @@ function doRotation(){
         })(newImg, this);
 
         newImg.src = this.alt;
-        $(this).css("height", "auto");
+        // $(this).css("height", "auto");
     });
 }
 
