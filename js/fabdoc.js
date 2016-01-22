@@ -450,7 +450,7 @@ function getOrientation(file, callback) {
 function doRotation(){
     // xhr.responseType = 'arraybuffer';
     $('.blog-post img').each(function(){
-        // "this" is natave imgae
+        // "this" is native imgae
         // var originCanvas = document.createElement('canvas');
         // var originContext = originCanvas.getContext('2d'); 
         // var w = this.width;
@@ -460,57 +460,59 @@ function doRotation(){
         // originCanvas.width = w; originCanvas.height = h;
         // originContext.drawImage(this,0,0,w,h);
         
-        var newimg = new Image();
+        var newImg = new Image();
         // fix this bug: Uncaught SecurityError: Failed to execute 'toDataURL' on 'HTMLCanvasElement': Tainted canvases may not be exported.
-        newimg.setAttribute('crossOrigin', 'anonymous');
-        newimg.onload = (function(scope, origin){
+        newImg.setAttribute('crossOrigin', 'anonymous');
+        newImg.onload = (function(scope, origin){
             return function(){
                 var xhr = new XMLHttpRequest();
-                xhr.open('GET', scope.src, true);
+                xhr.open('GET', origin.alt, true);
                 xhr.responseType = 'arraybuffer';
                 xhr.onload = (function(img, originImage){
+                    // console.log(img);
+                    // console.log(originImage);
                     return function(e) {
-                      getOrientation(this.response, function(orientation){
-                        if(orientation > 1){
-                            $(originImage).hide();
-                            // var canvas = document.getElementById('testCanvas');
-                            var canvas = document.createElement('canvas');
-                            var context;
-                            var width = img.width;
-                            var height = img.height;
-                            if(orientation == 3){
-                                canvas.width = width;
-                                canvas.height = height;
-                                context = canvas.getContext('2d');
-                                context.transform(-1, 0, 0, -1, width, height);
-                            }else if(orientation == 6){
-                                // context.rotate(180);
-                                canvas.width = height;
-                                canvas.height = width;
-                                context = canvas.getContext('2d');
-                                context.transform(0, 1, -1, 0, height , 0);
-                            }else if(orientation == 8){
-                                canvas.width = height;
-                                canvas.height = width;
-                                context = canvas.getContext('2d');
-                                context.transform(0, -1, 1, 0, 0, width);
+                        getOrientation(this.response, function(orientation){
+                            if(orientation > 1){
+                                $(originImage).hide();
+                                // var canvas = document.getElementById('testCanvas');
+                                var canvas = document.createElement('canvas');
+                                var context;
+                                var width = img.width;
+                                var height = img.height;
+                                if(orientation == 3){
+                                    canvas.width = width;
+                                    canvas.height = height;
+                                    context = canvas.getContext('2d');
+                                    context.transform(-1, 0, 0, -1, width, height);
+                                }else if(orientation == 6){
+                                    // context.rotate(180);
+                                    canvas.width = height;
+                                    canvas.height = width;
+                                    context = canvas.getContext('2d');
+                                    context.transform(0, 1, -1, 0, height , 0);
+                                }else if(orientation == 8){
+                                    canvas.width = height;
+                                    canvas.height = width;
+                                    context = canvas.getContext('2d');
+                                    context.transform(0, -1, 1, 0, 0, width);
+                                }
+                                context.drawImage(img, 0, 0);
+                                // alert(orientation);
+                                // _transformCanvas = canvas;
+                                var url = canvas.toDataURL();
+                                originImage.src = url;
+                                $(originImage).show();
                             }
-                            context.drawImage(img, 0, 0);
-                            // alert(orientation);
-                            // _transformCanvas = canvas;
-                            var url = canvas.toDataURL();
-                            originImage.src = url;
-                            $(originImage).show();
-                        }
-                      });
+                        });
                     };
                 })(scope, origin);
                 xhr.send();
             };
-        })(newimg, this);
+        })(newImg, this);
 
-        newimg.src = this.src;
-
+        newImg.src = this.alt;
+        $(this).css("height", "auto");
     });
 }
 

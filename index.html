@@ -13,8 +13,8 @@
     <script type="text/javascript" src="js/parse-1.2.19.min.js"></script>
     <script type="text/javascript" src="js/handlebars.min.js"></script>
     <script type="text/javascript" src="js/canvas-to-blob.min.js"></script>
-    
-    <!-- 
+
+    <!--
         <script type="text/javascript" src="js/vendor/jquery.ui.widget.js"></script>
         <script type="text/javascript" src="js/jquery.iframe-transport.js"></script>
         <script type="text/javascript" src="js/jquery.fileupload.js"></script>
@@ -30,7 +30,7 @@
     <div class="container" style="text-align: center;">
         <img src="image/Fablab-Taipei-Logo.png" alt="Fablab-Taipei-Logo" style="margin: 50px;" />
     </div>
-    
+
     <div class="container" id="main-container"></div>
 
     <script id="login-tpl" type="text/x-handlebars-template">
@@ -54,7 +54,7 @@
             </form>
         </div>
     </script>
-    
+
     <script id="projects-tpl" type="text/x-handlebars-template">
         <div class="col-md-12 blog-post">
             <h2 class="blog-post-title"><a href="#/create">Add New Project</a></h2>
@@ -80,7 +80,7 @@
             <h3 class="blog-post-title">Step {{order}}: {{commit}}</h3>
             <div class="row-fluid">
                 <div class="col-md-4">
-                    <img src="{{imgUrl}}" class="img-rounded img-responsive" style="image-orientation: from-image; height: auto; width: auto; max-width: 400px;" >
+                    <img src="img/clear.gif" alt="{{imgUrl}}" id="steps-img" class="img-rounded img-responsive" style="image-orientation: from-image; height: 400px; max-width: 100%; background: url('img/loading.gif') 50% no-repeat;" />
                 </div>
                 <div class="col-md-4 col-md-offset-2">
                     <div class="row-fluid">
@@ -131,7 +131,7 @@
             <h2 class="blog-post-title"><a href="#/project/">Back to Project List</a></h2>
         </div>
     </script>
-    
+
     <script id="create-project-tpl" type="text/x-handlebars-template">
         <div class="col-md-6 col-md-offset-3">
             <form>
@@ -149,7 +149,7 @@
             </form>
         </div>
     </script>
-    
+
     <script id="add-photo-tpl" type="text/x-handlebars-template">
         <div class="col-md-6 col-md-offset-3">
             <form>
@@ -182,31 +182,31 @@
             width: 200px;
             position: relative;
         }
-        
+
         #dropozne div {
             width: inherit;
             height: inherit;
             margin-left: -10px;
             margin-top: -10px;
         }
-        
+
         #dropzone.hover {
             border: 10px solid #222;
             color: #222;
         }
-        
+
         #dropzone.dropped {
             background: #222;
             border: 10px solid #222;
         }
-        
+
         #dropzone img {
             border-radius: 10px;
             vertical-align: middle;
             max-width: 95%;
             max-height: 95%;
         }
-        
+
         #dropzone [type="file"] {
             cursor: pointer;
             position: absolute;
