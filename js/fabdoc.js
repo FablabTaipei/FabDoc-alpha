@@ -286,28 +286,30 @@ $(function() {
                             });
                         });
 
-                        $('#delete-step-btn').click(function (e) {
-                            var order = this.data-order();
-                            var step = new Parse.Object("Step");
-                            var nextStep = new Parse.Object("Step");
-                            console.log(order);
-                            step.id = steps.models[order-1].id;
-                            nextStep.id = step.models[order].id;
+                        $('.collapse').on('show.bs.collapse', function () {
+                            var order = $(this).attr('order');
+                            $('#delete-step-btn-'+order).click(function (e) {
+                                var step = new Parse.Object("Step");
+                                var nextStep = new Parse.Object("Step");
 
-                            step.set('project', null);
-                            alert("!");
-                            step.save().then(function() {
-                                alert("WOW!");
-                                Parse.history.stop();
-                                Parse.history.start();
-                            }, function(e) {
-                                console.log(e);
+                                step.id = steps.models[order-1].id;
+                                step.set('project', null);
+                                
+                                for (var i = order; i < steps.models.length; i++) {
+                                    step.id = steps.models[order].id;
+                                    step.set('order', steps.models[order].attributes.order-1);
+                                }
+
+                                step.save().then(function() {
+                                    Parse.history.stop();
+                                    Parse.history.start();
+                                }, function(e) {
+                                    console.log(e);
+                                });
                             });
                         });
-
                         // to do rotation
                         doRotation();
-
                     });
                 }
             },
@@ -531,7 +533,6 @@ function doRotation(){
         })(newImg, this);
 
         newImg.src = this.alt;
-        // $(this).css("height", "auto");
     });
 }
 

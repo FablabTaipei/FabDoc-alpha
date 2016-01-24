@@ -92,10 +92,13 @@
                         <p class="blog-post-meta">{{code}}</p>
                     </div>
                     <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#edit-step" data-order="{{order}}" data-description="{{description}}" data-code-link="{{code}}" data-backdrop="false" data-keyboard="false">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#edit-step" data-order="{{order}}" data-description="{{description}}" data-code-link="{{code}}" data-backdrop="false" data-keyboard="false">
                         Edit
                     </button>
-                    <button type="button" class="btn btn-danger" id="delete-step-btn" data-order="{{order}}">Delete This Step</button>
+                    <!-- Button trigger delete-step Collapse -->
+                    <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#delete-step-{{order}}" data-order="{{order}}" aria-expanded="false" aria-controls="collapseExample">
+                        Delete
+                    </button>
                     <!-- Modal -->
                     <div class="modal fade" id="edit-step" tabindex="-1" role="dialog" aria-labelledby="step-order">
                         <div class="modal-dialog modal-lg" role="document">
@@ -121,6 +124,13 @@
                                     <button type="button" class="btn btn-primary" id="save-step-btn">Save changes</button>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    <!-- delete-step Collapse -->
+                    <div class="collapse" id="delete-step-{{order}}" order="{{order}}">
+                        <div class="well">
+                            <p>We encourage you to keep every steps safely even that you were doing something wrong in this step. Each dead end would be valuable to someone.</p>
+                            <button type="button" class="btn btn-danger" id="delete-step-btn-{{order}}">Delete This Step Anyway</button>
                         </div>
                     </div>
                 </div>
