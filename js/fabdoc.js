@@ -332,18 +332,16 @@ $(function() {
                             $('#uploadBtn').click(function (e) {
                                 // Prevent default submit event
                                 e.preventDefault();
+                                var $btn = $(this).button('loading');
 
                                 var fileUploadControl = $("#fileupload")[0];
                                 var commit = $("#commit").val();
-                                // aaa.ddd();
-                                writeConsole("<p>Uploading photo...</p>");
                                 if (fileUploadControl.files.length > 0) {
                                     var toDoUpload = function(theFile){
                                         var name = "photo.jpg";
                                         var parseFile = new Parse.File(name, theFile);
                                         // Save photos to Parse cloud first
                                         parseFile.save().then(function() {
-                                            writeConsole("<p>Almost there...</p>");
                                             var step = new Parse.Object("Step");
                                             var project = new Parse.Object("Project");
                                             project.id = id;
@@ -365,7 +363,6 @@ $(function() {
                                                 step.set("commit", commit);
                                                 step.save().then(function() {
                                                     // The file has been saved to Parse.
-                                                    writeConsole("<p>Completed.</p>");
                                                     // Render again
                                                     Parse.history.stop();
                                                     Parse.history.start();
