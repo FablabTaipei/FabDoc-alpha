@@ -286,6 +286,25 @@ $(function() {
                             });
                         });
 
+                        $('#delete-step-btn').click(function (e) {
+                            var order = this.data-order();
+                            var step = new Parse.Object("Step");
+                            var nextStep = new Parse.Object("Step");
+                            console.log(order);
+                            step.id = steps.models[order-1].id;
+                            nextStep.id = step.models[order].id;
+
+                            step.set('project', null);
+                            alert("!");
+                            step.save().then(function() {
+                                alert("WOW!");
+                                Parse.history.stop();
+                                Parse.history.start();
+                            }, function(e) {
+                                console.log(e);
+                            });
+                        });
+
                         // to do rotation
                         doRotation();
 
