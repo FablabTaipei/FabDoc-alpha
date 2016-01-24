@@ -286,9 +286,30 @@ $(function() {
                             });
                         });
 
+                        $('.collapse').on('show.bs.collapse', function () {
+                            var order = $(this).attr('order');
+                            $('#delete-step-btn-'+order).click(function (e) {
+                                var step = new Parse.Object("Step");
+                                var nextStep = new Parse.Object("Step");
+
+                                step.id = steps.models[order-1].id;
+                                step.set('project', null);
+                                
+                                for (var i = order; i < steps.models.length; i++) {
+                                    step.id = steps.models[order].id;
+                                    step.set('order', steps.models[order].attributes.order-1);
+                                }
+
+                                step.save().then(function() {
+                                    Parse.history.stop();
+                                    Parse.history.start();
+                                }, function(e) {
+                                    console.log(e);
+                                });
+                            });
+                        });
                         // to do rotation
                         doRotation();
-
                     });
                 }
             },
@@ -311,18 +332,16 @@ $(function() {
                             $('#uploadBtn').click(function (e) {
                                 // Prevent default submit event
                                 e.preventDefault();
+                                var $btn = $(this).button('loading');
 
                                 var fileUploadControl = $("#fileupload")[0];
                                 var commit = $("#commit").val();
-                                // aaa.ddd();
-                                writeConsole("<p>Uploading photo...</p>");
                                 if (fileUploadControl.files.length > 0) {
                                     var toDoUpload = function(theFile){
                                         var name = "photo.jpg";
                                         var parseFile = new Parse.File(name, theFile);
                                         // Save photos to Parse cloud first
                                         parseFile.save().then(function() {
-                                            writeConsole("<p>Almost there...</p>");
                                             var step = new Parse.Object("Step");
                                             var project = new Parse.Object("Project");
                                             project.id = id;
@@ -344,7 +363,6 @@ $(function() {
                                                 step.set("commit", commit);
                                                 step.save().then(function() {
                                                     // The file has been saved to Parse.
-                                                    writeConsole("<p>Completed.</p>");
                                                     // Render again
                                                     Parse.history.stop();
                                                     Parse.history.start();
@@ -459,7 +477,7 @@ function doRotation(){
         // // canvas.height = this.height;
         // originCanvas.width = w; originCanvas.height = h;
         // originContext.drawImage(this,0,0,w,h);
-        
+
         var newImg = new Image();
         // fix this bug: Uncaught SecurityError: Failed to execute 'toDataURL' on 'HTMLCanvasElement': Tainted canvases may not be exported.
         newImg.setAttribute('crossOrigin', 'anonymous');
@@ -512,7 +530,6 @@ function doRotation(){
         })(newImg, this);
 
         newImg.src = this.alt;
-        $(this).css("height", "auto");
     });
 }
 

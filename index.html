@@ -47,8 +47,8 @@
                 </div>
                 <div class="signLog"></div>
                 <div class="form-group" style="text-align: center;">
-                    <button id="signUpBtn" type="button" class="btn btn-default">Sign Up</button>
-                    <button id="signInBtn" type="button" class="btn btn-default">Sign In</button>
+                    <button id="signUpBtn" type="button" class="btn btn-primary">Sign Up</button>
+                    <button id="signInBtn" type="button" class="btn btn-default">Log In</button>
                 </div>
                 <div id="consoleTest"></div>
             </form>
@@ -80,9 +80,9 @@
             <h3 class="blog-post-title">Step {{order}}: {{commit}}</h3>
             <div class="row-fluid">
                 <div class="col-md-4">
-                    <img src="img/clear.gif" alt="{{imgUrl}}" id="steps-img" class="img-rounded img-responsive" style="image-orientation: from-image; height: 400px; max-width: 100%; background: url('img/loading.gif') 50% no-repeat;" />
+                    <img src="img/clear.gif" alt="{{imgUrl}}" id="steps-img" class="img-rounded img-responsive" style="image-orientation: from-image; height: auto; width: 400px; max-height: 800px; background: url('img/loading.gif') 50% no-repeat;" />
                 </div>
-                <div class="col-md-4 col-md-offset-2">
+                <div class="col-md-4 col-md-offset-1">
                     <div class="row-fluid">
                         <h3 class="blog-post-title">description</h3>
                         <p class="blog-post-meta">{{description}}</p>
@@ -92,8 +92,12 @@
                         <p class="blog-post-meta">{{code}}</p>
                     </div>
                     <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#edit-step" data-order="{{order}}" data-description="{{description}}" data-code-link="{{code}}" data-backdrop="false" data-keyboard="false">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#edit-step" data-order="{{order}}" data-description="{{description}}" data-code-link="{{code}}" data-backdrop="false" data-keyboard="false">
                         Edit
+                    </button>
+                    <!-- Button trigger delete-step Collapse -->
+                    <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#delete-step-{{order}}" data-order="{{order}}" aria-expanded="false" aria-controls="collapseExample">
+                        Delete
                     </button>
                     <!-- Modal -->
                     <div class="modal fade" id="edit-step" tabindex="-1" role="dialog" aria-labelledby="step-order">
@@ -122,6 +126,13 @@
                             </div>
                         </div>
                     </div>
+                    <!-- delete-step Collapse -->
+                    <div class="collapse" id="delete-step-{{order}}" order="{{order}}">
+                        <div class="well">
+                            <p>We encourage you to keep every steps safely even that you were doing something wrong in this step. Each dead end would be valuable to someone.</p>
+                            <button type="button" class="btn btn-danger" id="delete-step-btn-{{order}}">Delete This Step Anyway</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -144,7 +155,7 @@
                     <textarea class="form-control" rows="2" id="description" placeholder="Add description in 140 words"></textarea>
                 </div>
                 <div class="form-group" style="text-align: center;">
-                    <button id="startAddPhotoBtn" type="button" class="btn btn-default">Start Shooting</button>
+                    <button id="startAddPhotoBtn" type="button" class="btn btn-primary">Start Shooting</button>
                 </div>
             </form>
         </div>
@@ -162,9 +173,8 @@
                     <input type="text" class="form-control" id="commit" placeholder="Several words to commit this step">
                 </div>
                 <div class="form-group" style="text-align: center;">
-                    <button type="submit" class="btn btn-default start" id="uploadBtn">Start upload</button>
+                    <button type="submit" class="btn btn-lg btn-default start" data-loading-text="Uploading..." id="uploadBtn">Start upload</button>
                 </div>
-                <div id="consoleTest"></div>
                 <div class="col-md-12 blog-post">
                     <h2 class="blog-post" id="back-to-edit"></h2>
                 </div>
