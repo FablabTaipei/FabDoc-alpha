@@ -9,6 +9,7 @@ Recommended Browser: Chrome、Firefox
 ### Sign Up & Log In
 Please remember your own username and password. We are working on E-mail confirmation registration.
 ### Add New Project
+In this version, you can only see your project list and edit.
 ### Upload photo
 You could take a photo to each step by your mobile browser and give a short commit to each photo.
 ### Edit steps
