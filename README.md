@@ -12,7 +12,7 @@ Please remember your own username and password. We are working on E-mail confirm
 ### Upload photo
 You could take a photo to each step by your mobile browser and give a short commit to each photo.
 ### Edit steps
-After shooting, You could edit "description" and "code link" now on your desktop or laptop now. Later, we are going to publish new version with "material" and "tool" for each step, and the summary of these categories will automatically show up on the top of project page.
+After shooting, You could edit "description" and "code link" now on your desktop or laptop. Later, we are going to publish new version with "material" and "tool" for each step, and the summary of these categories will automatically show up on the top of project page.
 
 ## Coming Soon
 * Share and edit your project to others or even public
