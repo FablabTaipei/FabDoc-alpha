@@ -492,7 +492,7 @@ function doRotation(){
                     return function(e) {
                         getOrientation(this.response, function(orientation){
                             if(orientation > 1){
-                                $(originImage).hide();
+                                // $(originImage).hide();
                                 // var canvas = document.getElementById('testCanvas');
                                 var canvas = document.createElement('canvas');
                                 var context;
@@ -520,7 +520,9 @@ function doRotation(){
                                 // _transformCanvas = canvas;
                                 var url = canvas.toDataURL();
                                 originImage.src = url;
-                                $(originImage).show();
+                                // $(originImage).show();
+                            }else{
+                                originImage.src = originImage.alt;
                             }
                         });
                     };
