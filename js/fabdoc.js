@@ -467,6 +467,7 @@ function getOrientation(file, callback) {
 
 function doRotation(){
     // xhr.responseType = 'arraybuffer';
+    var index = 0;
     $('.blog-post img').each(function(){
         // "this" is native imgae
         // var originCanvas = document.createElement('canvas');
@@ -531,7 +532,11 @@ function doRotation(){
             };
         })(newImg, this);
 
-        newImg.src = this.alt;
+        setTimeout((function(tmpimg, oldimg){
+            return function(){ tmpimg.src = oldimg.alt; };
+        })(newImg, this), index++ * 200);
+
+        // newImg.src = this.alt;
     });
 }
 
