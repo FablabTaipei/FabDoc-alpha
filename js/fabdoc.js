@@ -467,8 +467,7 @@ function getOrientation(file, callback) {
 
 function doRotation(){
     // xhr.responseType = 'arraybuffer';
-    var index = 0;
-    $('.blog-post img').each(function(){
+    $('.blog-post img').each(function(idx){
         // "this" is native imgae
         // var originCanvas = document.createElement('canvas');
         // var originContext = originCanvas.getContext('2d'); 
@@ -534,7 +533,7 @@ function doRotation(){
 
         setTimeout((function(tmpimg, oldimg){
             return function(){ tmpimg.src = oldimg.alt; };
-        })(newImg, this), index++ * 200);
+        })(newImg, this), idx * 200);
 
         // newImg.src = this.alt;
     });
