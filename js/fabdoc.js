@@ -409,45 +409,45 @@ $(function() {
     router.start();
 
     // $("#compressTest")
-    $("#compressTestBtn").click(function(){
-        var fileUploadControl = $("#compressTest")[0];
-        // var commit = $("#commit").val();
-        if (fileUploadControl.files.length > 0) {
-            var toDoUpload = function(theFile){
-                var name = "photo.jpg";
-                var parseFile = new Parse.File(name, theFile);
-                // Save photos to Parse cloud first
-                parseFile.save().then(function() {
-                    var step = new Parse.Object("PhotoCompressTest");
-                    // var project = new Parse.Object("Project");
-                    // project.id = id;
-                    step.set("photo", parseFile);
-                    step.set("imgUrl", parseFile.url());
-                    // step.set("imgUrl", parseFile.url());
-                    // step.set("commit", commit);
-                    step.save().then(function(response) {
-                        // The file has been saved to Parse.
-                        // Render again
-                        // Parse.history.stop();
-                        // Parse.history.start();
-                        // _transformCanvas = null;
-                        console.log(response);
-                    }, function(error) {
-                        // The file either could not be read, or could not be saved to Parse.
-                        alert(error);
-                    });
-                });
-            };
-            // if(_transformCanvas){
-            //     _transformCanvas.toBlob(function(blob){
-            //         toDoUpload(new File([blob], "name"));
-            //     });
-            // }else{
-            //     toDoUpload(fileUploadControl.files[0]);
-            // }
-            toDoUpload(fileUploadControl.files[0]);
-        };
-    });
+    // $("#compressTestBtn").click(function(){
+    //     var fileUploadControl = $("#compressTest")[0];
+    //     // var commit = $("#commit").val();
+    //     if (fileUploadControl.files.length > 0) {
+    //         var toDoUpload = function(theFile){
+    //             var name = "photo.jpg";
+    //             var parseFile = new Parse.File(name, theFile);
+    //             // Save photos to Parse cloud first
+    //             parseFile.save().then(function() {
+    //                 var step = new Parse.Object("PhotoCompressTest");
+    //                 // var project = new Parse.Object("Project");
+    //                 // project.id = id;
+    //                 step.set("photo", parseFile);
+    //                 step.set("imgUrl", parseFile.url());
+    //                 // step.set("imgUrl", parseFile.url());
+    //                 // step.set("commit", commit);
+    //                 step.save().then(function(response) {
+    //                     // The file has been saved to Parse.
+    //                     // Render again
+    //                     // Parse.history.stop();
+    //                     // Parse.history.start();
+    //                     // _transformCanvas = null;
+    //                     console.log(response);
+    //                 }, function(error) {
+    //                     // The file either could not be read, or could not be saved to Parse.
+    //                     alert(error);
+    //                 });
+    //             });
+    //         };
+    //         // if(_transformCanvas){
+    //         //     _transformCanvas.toBlob(function(blob){
+    //         //         toDoUpload(new File([blob], "name"));
+    //         //     });
+    //         // }else{
+    //         //     toDoUpload(fileUploadControl.files[0]);
+    //         // }
+    //         toDoUpload(fileUploadControl.files[0]);
+    //     };
+    // });
 
 });
 
