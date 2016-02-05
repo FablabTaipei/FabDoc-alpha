@@ -337,7 +337,9 @@ $(function() {
 
                                 var fileUploadControl = $("#fileupload")[0];
                                 var commit = $("#commit").val();
-                                if (fileUploadControl.files.length > 0 && fileUploadControl.files[0].size <= 2*1024*1024) {
+
+                                // Make sure at least one photo and it is under 5 MB.
+                                if (fileUploadControl.files.length > 0 && fileUploadControl.files[0].size <= 5*1024*1024) {
                                     var toDoUpload = function(theFile) {
                                         var name = "photo.jpg";
                                         var parseFile = new Parse.File(name, theFile);
@@ -384,7 +386,7 @@ $(function() {
                                     // }
                                     toDoUpload(fileUploadControl.files[0]);
                                 } else {
-                                    alert("Please add at least one photo and it should be under 2 MB.");
+                                    alert("Please add at least one photo and it should be under 5 MB.");
                                     $(uploadBtn).button("reset");
                                 }
                             });
