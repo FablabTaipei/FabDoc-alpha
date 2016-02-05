@@ -336,8 +336,8 @@ $(function() {
 
                                 var fileUploadControl = $("#fileupload")[0];
                                 var commit = $("#commit").val();
-                                if (fileUploadControl.files.length > 0) {
-                                    var toDoUpload = function(theFile){
+                                if (fileUploadControl.files.length > 0 || fileUploadControl.files[0].size <= 3072) {
+                                    var toDoUpload = function(theFile) {
                                         var name = "photo.jpg";
                                         if (theFile.size <= 3072) {
                                             var parseFile = new Parse.File(name, theFile);
@@ -374,7 +374,7 @@ $(function() {
                                                     });
                                                 });
                                             });
-                                        } else { alert("Please compress your image") }
+                                        }
                                     };
                                     // if(_transformCanvas){
                                     //     _transformCanvas.toBlob(function(blob){
@@ -384,6 +384,9 @@ $(function() {
                                     //     toDoUpload(fileUploadControl.files[0]);
                                     // }
                                     toDoUpload(fileUploadControl.files[0]);
+                                } else { 
+                                    alert("Please upload file or compress your image less than 2MB first");
+                                    $('#uploadBtn').button("reset");
                                 };
                             });
                         },
