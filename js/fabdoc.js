@@ -32,7 +32,7 @@ $(function() {
             // }
             $('#dropzone').addClass('dropped');
             $('#dropzone img').remove();
-            if ((/^image\/(gif|png|jpeg)$/i).test(file.type)) {
+            if ((/^image\/(gif|png|jpeg|jpg)$/i).test(file.type)) {
                 var reader = new FileReader(file);
                 reader.readAsDataURL(file);
                 reader.onload = function(e) {
@@ -337,49 +337,50 @@ $(function() {
                             $('#uploadBtn').click(function (e) {
                                 // Prevent default submit event
                                 e.preventDefault();
+
                                 var $btn = $(this).button('loading');
 
                                 var fileUploadControl = $("#fileupload")[0];
                                 var commit = $("#commit").val();
-                                if (fileUploadControl.files.length > 0) {
-                                    var toDoUpload = function(theFile){
-                                        var name = "photo.jpg";
-                                        if (theFile.size <= 3072) {
-                                            var parseFile = new Parse.File(name, theFile);
-                                            // Save photos to Parse cloud first
-                                            parseFile.save().then(function() {
-                                                var step = new Parse.Object("Step");
-                                                var project = new Parse.Object("Project");
-                                                project.id = id;
 
-                                                var queryStep = new Parse.Query("Step");
-                                                var orderMax = 0;
-                                                queryStep.equalTo("project", project);
-                                                queryStep.descending("order");
-                                                queryStep.first().then(function(result) {
-                                                    if (typeof(result) !== 'undefined') {
-                                                        // Onlt if this is an existing project
-                                                        orderMax = result.get("order");
-                                                    }
-                                                    step.set("uploadedBy", Parse.User.current());
-                                                    step.set("project", project);
-                                                    step.set("order", orderMax+1);
-                                                    step.set("photo", parseFile);
-                                                    step.set("imgUrl", parseFile.url());
-                                                    step.set("commit", commit);
-                                                    step.save().then(function() {
-                                                        // The file has been saved to Parse.
-                                                        // Render again
-                                                        Parse.history.stop();
-                                                        Parse.history.start();
-                                                        _transformCanvas = null;
-                                                    }, function(error) {
-                                                        // The file either could not be read, or could not be saved to Parse.
-                                                        alert(error);
-                                                    });
+                                // Make sure at least one photo and it is under 5 MB.
+                                if (fileUploadControl.files.length > 0 && fileUploadControl.files[0].size <= 5*1024*1024) {
+                                    var toDoUpload = function(theFile) {
+                                        var name = "photo.jpg";
+                                        var parseFile = new Parse.File(name, theFile);
+                                        // Save photos to Parse cloud first
+                                        parseFile.save().then(function() {
+                                            var step = new Parse.Object("Step");
+                                            var project = new Parse.Object("Project");
+                                            project.id = id;
+
+                                            var queryStep = new Parse.Query("Step");
+                                            var orderMax = 0;
+                                            queryStep.equalTo("project", project);
+                                            queryStep.descending("order");
+                                            queryStep.first().then(function(result) {
+                                                if (typeof(result) !== 'undefined') {
+                                                    // Onlt if this is an existing project
+                                                    orderMax = result.get("order");
+                                                }
+                                                step.set("uploadedBy", Parse.User.current());
+                                                step.set("project", project);
+                                                step.set("order", orderMax+1);
+                                                step.set("photo", parseFile);
+                                                step.set("imgUrl", parseFile.url());
+                                                step.set("commit", commit);
+                                                step.save().then(function() {
+                                                    // The file has been saved to Parse.
+                                                    // Render again
+                                                    Parse.history.stop();
+                                                    Parse.history.start();
+                                                    _transformCanvas = null;
+                                                }, function(error) {
+                                                    // The file either could not be read, or could not be saved to Parse.
+                                                    alert(error);
                                                 });
                                             });
-                                        } else { alert("Please compress your image") }
+                                        });
                                     };
                                     // if(_transformCanvas){
                                     //     _transformCanvas.toBlob(function(blob){
@@ -389,7 +390,10 @@ $(function() {
                                     //     toDoUpload(fileUploadControl.files[0]);
                                     // }
                                     toDoUpload(fileUploadControl.files[0]);
-                                };
+                                } else {
+                                    alert("Please add at least one photo and it should be under 5 MB.");
+                                    $(uploadBtn).button("reset");
+                                }
                             });
                         },
                         error: function() {
