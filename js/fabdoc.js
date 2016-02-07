@@ -127,6 +127,8 @@ $(function() {
                 // user.set("email", email); //optional
                 user.set("username", $('#inputUsername').val()); //required
                 user.set("password", $('#inputPassword').val()); //required
+                user.set("email", $('#inputUsername').val()); //same as username
+
                 writeConsole("<p>Processing.....</p>");
                 user.signUp(null, {
                     success: function(user) {
