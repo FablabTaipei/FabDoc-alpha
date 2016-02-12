@@ -117,7 +117,8 @@ $(function() {
             template: Handlebars.compile($('#login-tpl').html()),
             events: {
                 'click #signUpBtn': 'signUp',
-                'click #signInBtn': 'login'
+                'click #signInBtn': 'login',
+                'click #forgotPassword': 'forgotPassword'
             },
             signUp: function(e){
                 // Prevent default submit event
@@ -127,6 +128,8 @@ $(function() {
                 // user.set("email", email); //optional
                 user.set("username", $('#inputUsername').val()); //required
                 user.set("password", $('#inputPassword').val()); //required
+                user.set("email", $('#inputUsername').val()); //same as username
+
                 writeConsole("<p>Processing.....</p>");
                 user.signUp(null, {
                     success: function(user) {
@@ -152,6 +155,26 @@ $(function() {
                         router.navigate('#/project', { trigger: true });
                     },
                     error: function(user, error) {
+                        alert("Error: " + error.code + " " + error.message);
+                    }
+                });
+            },
+            forgotPassword: function(e){
+                // Prevent default submit event
+                e.preventDefault();
+
+                var n = $('#inputUsername').val();
+                var p = $('#inputPassword').val();
+
+                writeConsole("<p>Processing.....</p>");
+                Parse.User.requestPasswordReset( n, {
+                    success: function() {
+                        // Password reset request was sent successfully
+                        alert("The password reset link is send to your e-mail: " + n);
+                        location.reload();
+                    },
+                    error: function(error) {
+                        // Show the error message somewhere
                         alert("Error: " + error.code + " " + error.message);
                     }
                 });
