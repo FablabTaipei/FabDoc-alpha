@@ -118,7 +118,7 @@ $(function() {
             events: {
                 'click #signUpBtn': 'signUp',
                 'click #signInBtn': 'login',
-                'click #forgotPassword': 'forgotPassword'
+                'click #sendResetMail': 'forgotPassword'
             },
             signUp: function(e){
                 // Prevent default submit event
@@ -163,14 +163,13 @@ $(function() {
                 // Prevent default submit event
                 e.preventDefault();
 
-                var n = $('#inputUsername').val();
-                var p = $('#inputPassword').val();
+                var n = $('#forgetMail').val();
 
                 writeConsole("<p>Processing.....</p>");
                 Parse.User.requestPasswordReset( n, {
                     success: function() {
                         // Password reset request was sent successfully
-                        alert("The password reset link is send to your e-mail: " + n);
+                        alert("The password reset link is send to your e-mail: " + n + ". Please check your mailbox and reset your password.");
                         location.reload();
                     },
                     error: function(error) {
