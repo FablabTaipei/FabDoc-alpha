@@ -134,7 +134,7 @@ $(function() {
                 user.signUp(null, {
                     success: function(user) {
                         writeConsole("<p>Completed.</p>");
-                        alert("success, signed up");
+                        alert("success, signed up.\n\nNOTICE: You have to check your email and verify first. Before that, you can not add and upload any project in FabDoc. Thank you!");
                         router.navigate('#/project', { trigger: true });
                     },
                     error: function(user, error) {
@@ -246,9 +246,13 @@ $(function() {
                 // 'logout': 'logout',
             },
             index: function() {
-                var loginView = new LoginView();
-                loginView.render();
-                $container.html(loginView.el);
+                if (!Parse.User.current()) {
+                    var loginView = new LoginView();
+                    loginView.render();
+                    $container.html(loginView.el);
+                } else {
+                    this.navigate('#/project', { trigger: true });
+                }
             },
             project: function() {
                 // List of projects which user has Read Access to control
@@ -262,7 +266,8 @@ $(function() {
                             $container.html(projectsView.el);
                         },
                         error: function(projects, error) {
-                            console.log(error);
+                            alert(error);
+                            this.navigate('#/', { trigger: true });
                         }
                     });
                 }
@@ -426,13 +431,19 @@ $(function() {
                 }
             },
             create: function() {
-                if (!Parse.User.current()) {
-                    this.navigate('#/', { trigger: true });
-                } else {
-                    var createprojectView = new CreateProjectView();
-                    createprojectView.render();
-                    $container.html(createprojectView.el);
-                }
+                var self = this;
+                Parse.User.current().fetch().then(function (user) {
+                    if (!user) {
+                        self.navigate('#/', { trigger: true });
+                    } else if (!user.get("emailVerified")) {
+                        alert("Sorry! You have to check your email and verify.");
+                        self.navigate('#/project', { trigger: true });
+                    } else {
+                        var createprojectView = new CreateProjectView();
+                        createprojectView.render();
+                        $container.html(createprojectView.el);
+                    }
+                });   
             }
         }),
         router = new Router();
