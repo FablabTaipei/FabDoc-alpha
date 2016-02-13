@@ -12,6 +12,8 @@ $(function() {
     window._currentImage = null;
     window._transformCanvas = null;
 
+    HandlebarsIntl.registerWith(Handlebars);
+
     Handlebars.registerHelper('getUrl', function(photo, photo2) {
       var valid = photo? photo : photo2;
       return valid.url || "";

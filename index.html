@@ -20,6 +20,7 @@
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/parse-1.2.19.min.js"></script>
     <script type="text/javascript" src="js/handlebars.min.js"></script>
+    <script type="text/javascript" src="js/handlebars-intl.min.js"></script>
     <script type="text/javascript" src="js/canvas-to-blob.min.js"></script>
     <!--
         <script type="text/javascript" src="js/reMarked.js"></script>
@@ -88,9 +89,8 @@
         <br>
         <div class="col-md-12 blog-post">
             <h2 class="blog-post-title"><a href="#/project/{{objectId}}">{{title}}</a></h2>
-            <p class="blog-post-meta">by {{hostName}}</p>
-
-            <div>{{description}}</div>
+            <u><I>{{formatDate createdAt day="numeric" month="long" year="numeric"}} | By <strong>{{hostName}}</strong></I></u>
+            <p class="lead"> <br> {{description}}</p>
         </div>
         {{/each}}
     </script>
@@ -103,6 +103,7 @@
         <br>
         <div class="col-md-12 blog-post">
             <h3 class="blog-post-title">Step {{order}}: {{commit}}</h3>
+            <p><u>Updated {{formatRelative updatedAt}}</u></p>
             <div class="row-fluid">
                 <div class="col-md-4">
                     <a href="{{getUrl photo}}" target="_blank">
