@@ -12,6 +12,8 @@ $(function() {
     window._currentImage = null;
     window._transformCanvas = null;
 
+    HandlebarsIntl.registerWith(Handlebars);
+
     Handlebars.registerHelper('getUrl', function(photo, photo2) {
       var valid = photo? photo : photo2;
       return valid.url || "";
@@ -241,29 +243,36 @@ $(function() {
                 'shoot/:id': 'shoot',
                 'login': 'index',
                 'create': 'create',
+                'logout': 'logout',
                 // 'edit/:id': 'edit',
                 // 'del/:id': 'del',
-                // 'logout': 'logout',
             },
             index: function() {
                 if (!Parse.User.current()) {
                     var loginView = new LoginView();
                     loginView.render();
                     $container.html(loginView.el);
+                    $('#navbar').hide();
                 } else {
                     this.navigate('#/project', { trigger: true });
                 }
+            },
+            logout: function() {
+                Parse.User.logOut();
+                this.navigate('#/', { trigger: true });
             },
             project: function() {
                 // List of projects which user has Read Access to control
                 if (!Parse.User.current()) {
                     this.navigate('#/', { trigger: true });
                 } else {
+                    $('#nav-user').text(Parse.User.current().get('username'));
                     this.projects.fetch({
                         success: function(projects) {
                             var projectsView = new ProjectsView({ collection: projects });
                             projectsView.render();
                             $container.html(projectsView.el);
+                            $('#navbar').show();
                         },
                         error: function(projects, error) {
                             alert(error);
