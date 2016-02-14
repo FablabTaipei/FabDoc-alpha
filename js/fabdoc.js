@@ -243,9 +243,9 @@ $(function() {
                 'shoot/:id': 'shoot',
                 'login': 'index',
                 'create': 'create',
+                'logout': 'logout',
                 // 'edit/:id': 'edit',
                 // 'del/:id': 'del',
-                // 'logout': 'logout',
             },
             index: function() {
                 if (!Parse.User.current()) {
@@ -446,6 +446,9 @@ $(function() {
                         $container.html(createprojectView.el);
                     }
                 });   
+            },
+            logout: function() {
+                Parse.User.logOut();
             }
         }),
         router = new Router();
