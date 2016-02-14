@@ -263,20 +263,22 @@ $(function() {
             },
             project: function() {
                 // List of projects which user has Read Access to control
+                var self = this;
                 if (!Parse.User.current()) {
                     this.navigate('#/', { trigger: true });
                 } else {
-                    $('#nav-user').text(Parse.User.current().get('username'));
                     this.projects.fetch({
                         success: function(projects) {
                             var projectsView = new ProjectsView({ collection: projects });
                             projectsView.render();
                             $container.html(projectsView.el);
+                            $('#nav-user').text(Parse.User.current().get('username'));
                             $('#navbar').show();
                         },
                         error: function(projects, error) {
-                            alert(error);
-                            this.navigate('#/', { trigger: true });
+                            Parse.User.logOut();
+                            alert("Session token error: " + error);
+                            self.navigate('#/', { trigger: true });
                         }
                     });
                 }
