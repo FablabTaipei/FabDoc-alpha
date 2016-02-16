@@ -42,7 +42,7 @@ After shooting, You could edit "description" and "code link" now on your desktop
 
 ![](http://i.imgur.com/HsHT71t.jpg)
 
-Although we cannot share projects to each other now, there is static **embeddable** code for each step. You can share the specific step by embedding to your site or blog.
+Although we cannot share projects to each other now, there is static **embeddable** code in Bootstrap style for each step. You can share the specific step by embedding to your site or blog.
 
 ## Development
 We are working on "branch" freature that can help you do projects in the way of version control. It might not be like Git which let you easily see the difference in every commits but will be a new "branching and merging" system.
