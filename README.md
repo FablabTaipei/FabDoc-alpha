@@ -22,7 +22,7 @@ Based on GitHub pages and Parse backend([will be closed in one year](http://blog
 
 ## Try
 ### Sign Up & Log In
-Type in your Email and password to sign up or log in (in same page). Before add new project, you have to verify it with Email first.
+Type in your Email and password to sign up or log in (in same page). Before adding new project, you have to verify it with Email first.
 
 ### Add New Project
 In this version, you can only see default tutorial "How To Use FabDoc" and your own projects. You do not have promission to the project which not belongs to you.
