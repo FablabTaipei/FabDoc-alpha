@@ -157,15 +157,20 @@
                         <h3 class="blog-post-title">code link</h3>
                         <p class="blog-post-meta">{{code}}</p>
                     </div>
-                    <!-- Button trigger modal -->
+                    <!-- Button trigger Edit-step Modal -->
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#edit-step" data-order="{{order}}" data-description="{{description}}" data-code-link="{{code}}" data-backdrop="false" data-keyboard="false">
                         Edit
+                    </button>
+                    <!-- Button trigger Embeddable-step Modal -->
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#embed-step" data-order="{{order}}" data-commit="{{commit}}" data-description="{{description}}" data-img-src="{{getUrl compressedPhoto photo}}" data-code-link="{{code}}" data-backdrop="false" data-keyboard="false">
+                        Embed
                     </button>
                     <!-- Button trigger delete-step Collapse -->
                     <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#delete-step-{{order}}" data-order="{{order}}" aria-expanded="false" aria-controls="collapseExample">
                         Delete
                     </button>
-                    <!-- Modal -->
+
+                    <!-- Edit-step Modal -->
                     <div class="modal fade" id="edit-step" tabindex="-1" role="dialog" aria-labelledby="step-order">
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
@@ -188,6 +193,28 @@
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                     <button type="button" class="btn btn-primary" id="save-step-btn">Save changes</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Embeddable-step Modal -->
+                    <div class="modal fade" id="embed-step" tabindex="-1" role="dialog" aria-labelledby="step-order">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">Embeddable Code To Your Site</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form>
+                                        <div class="form-group">
+                                            <label for="description-text" class="control-label">Copy & Paste</label>
+                                            <textarea class="form-control" id="embed-text" value=""></textarea>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                 </div>
                             </div>
                         </div>

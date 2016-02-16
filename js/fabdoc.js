@@ -15,8 +15,8 @@ $(function() {
     HandlebarsIntl.registerWith(Handlebars);
 
     Handlebars.registerHelper('getUrl', function(photo, photo2) {
-      var valid = photo? photo : photo2;
-      return valid.url || "";
+        var valid = photo? photo : photo2;
+        return valid.url || "";
     });
 
     var dropzone = function() {
@@ -244,8 +244,6 @@ $(function() {
                 'login': 'index',
                 'create': 'create',
                 'logout': 'logout',
-                // 'edit/:id': 'edit',
-                // 'del/:id': 'del',
             },
             index: function() {
                 if (!Parse.User.current()) {
@@ -327,6 +325,19 @@ $(function() {
                                     console.log(e);
                                 });
                             });
+                        });
+
+                        // If click "Edit", modal would show up
+                        $('#embed-step').on('show.bs.modal', function (event) {
+                            var button = $(event.relatedTarget);
+                            var order = button.data('order');
+                            var commit = button.data('commit');
+                            var description = button.data('description');
+                            var code = button.data('code-link');
+                            var img = button.data('img-src');
+
+                            var modal = $(this);
+                            modal.find('.modal-body #embed-text').text("<iframe frameborder='0' width='400px' scrolling='no' id='id-"+order+"-Iframe'></iframe><script type='text/javascript'>var doc = document.getElementById('id-"+order+"-Iframe').contentWindow.document;doc.open();doc.write('<div class=\"thumbnail\"><img src=\""+img+"\" class=\"img-rounded img-responsive\" style=\"image-orientation: from-image; height: auto; width: 400px; max-height: 800px;\"><div class=\"caption\"><h3 class=\"blog-post-title\">Step "+order+" : "+commit+"</h3><p class=\"blog-post-meta\">"+description+"</p></div></div><link rel=\"stylesheet\"type=\"text/css\"href=\"http://fablabtaipei.github.io/FabDoc-alpha/js/embed_style_bootstrap.css\"/>\');doc.close();var iFramID"+order+"= document.getElementById('id-"+order+"-Iframe');iFramID"+order+".onload=function(){iFramID"+order+".height = '';iFramID"+order+".height = iFramID"+order+".contentWindow.document.getElementsByClassName(\"thumbnail\")[0].offsetHeight+\"px\";};</script>");
                         });
 
                         $('.collapse').on('show.bs.collapse', function () {
