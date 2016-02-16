@@ -8,7 +8,7 @@ Recommended Browser: **Chrome**、**Firefox**
 ## About
 FabDoc is under active development.
 
-Based on GitHub pages and Parse backend([will be closed in one year](http://blog.parse.com/announcements/moving-on/)), we try to build a better platform to let everyone record their project in Git-like workflow. Every makerspaces in the world could also easily deploy their local documentation platform by Fork.
+Based on GitHub pages and Parse backend ([will be closed in one year](http://blog.parse.com/announcements/moving-on/)), we try to build a better platform to let everyone record their project in Git-like workflow. Every makerspaces in the world could also easily deploy their local documentation platform by "fork".
 
 ## Deploy
 * Fork
@@ -27,7 +27,10 @@ Type in your Email and password to sign up or log in (in same page). Before addi
 ### Add New Project
 In this version, you can only see default tutorial "How To Use FabDoc" and your own projects. You do not have promission to the project which not belongs to you.
 
-Of course, sharing and corporating with your friends should be a key feature. It have priority in development.
+![](http://i.imgur.com/vKlbOsn.jpg)
+![](http://i.imgur.com/4F0um7r.jpg)
+
+Of course, sharing and corporating with friends should be a key feature. It has priority in development.
 
 ### Upload photo
 You could take a photo to each step by your mobile browser and give a short commit to each photo.
@@ -37,7 +40,9 @@ When you click on "Upload", you could just leave your phone and go back to work.
 ### Edit steps
 After shooting, You could edit "description" and "code link" now on your desktop or laptop. Later, we are going to publish new version with "material" and "tool" for each step, and the summary of these categories will automatically show up on the top of project page. 
 
-Before we can share projects to each other with like, there is **embeddable** code for each step. You can share the specific step by embedding to your site or blog.
+![](http://i.imgur.com/HsHT71t.jpg)
+
+Although we cannot share projects to each other now, there is static **embeddable** code for each step. You can share the specific step by embedding to your site or blog.
 
 ## Development
 We are working on "branch" freature that can help you do projects in the way of version control. It might not be like Git which let you easily see the difference in every commits but will be a new "branching and merging" system.
