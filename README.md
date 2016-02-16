@@ -3,7 +3,7 @@ Prototype version of project documentation platform for desktop and mobile.
 
 http://fablabtaipei.github.io/FabDoc-alpha/
 
-Recommended Browser: **Chrome**、**Firefox**
+Recommended Browser: **Chrome**、**Firefox** (Cross-domain issue in Safari)
 
 ## About
 FabDoc is under active development.
