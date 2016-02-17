@@ -10,15 +10,19 @@ FabDoc is under active development.
 
 Based on GitHub pages and Parse backend ([will be closed in one year](http://blog.parse.com/announcements/moving-on/)), we try to build a better platform to let everyone record their project in Git-like workflow. Every makerspaces in the world could also easily deploy their local documentation platform by "fork".
 
-## Deploy
+## Deploy (if you want to build your local platform)
 * Fork
 * Build [GitHub pages](https://pages.github.com)
 * Log in [Parse](https://www.parse.com/) (with existing account)
 * Create new App on Parse
 * Copy, paste your Parse App [token](https://parse.com/apps/quickstart#parse_data/web/existing) to fabdoc.js
+* Enable "Verify user emails" in Parse App setting
+* Deploy [Cloud Code](https://github.com/FablabTaipei/FabDoc-alpha.cloudcode) of resizing images to Parse App
 * Enjoy it
 
 > Parse will be closed in one year so you cannot sign up right now. We are planning to work on Parse open source server and develop a  package(e.g. npm) which can make us deploy our platform more quickly.
+
+> We use Cloud Code to resize every images. This feature would make browser load each step list faster. If you do not know how to deploy, please follow [the official tutorial](https://parse.com/docs/cloudcode/guide#command-line).
 
 ## Try
 ### Sign Up & Log In
